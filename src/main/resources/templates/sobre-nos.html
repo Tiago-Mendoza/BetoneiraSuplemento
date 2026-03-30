@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sobre Nós - Betoneira Suplementos</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/image/favicon.png" />
+    <link href="/css/style.css" rel="stylesheet" />
+</head>
+<body>
+    
+    <!-- Universal Navbar -->
+    <nav class="custom-navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos">
+            </a>
+
+            <div class="navbar-links">
+                <a class="nav-link" th:href="@{/home}">Home</a>
+                <a class="nav-link" th:href="@{/produtos}">Produtos</a>
+                <a class="nav-link active" th:href="@{/sobre-nos}">Sobre nós</a>
+            </div>
+
+            <div class="navbar-icons">
+                <a class="nav-icon" href="#">
+                    <img th:src="@{/image/Lupa.png}" alt="Buscar">
+                </a>
+                <a class="nav-icon" th:href="@{/carrinho}">
+                    <img th:src="@{/image/CarCompras.png}" alt="Carrinho de Compras">
+                </a>
+                <a class="nav-icon" th:href="@{/login}">
+                    <img th:src="@{/image/Seta.png}" alt="Login">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container" style="max-width: 800px;">
+            
+            <div class="about-hero">
+                <h1 style="color: #000000;">A Lenda da Betoneira</h1>
+                <p>Construindo shapes indestrutíveis desde que uma brincadeira saiu do controle.</p>
+            </div>
+
+            <div class="about-content" style="grid-template-columns: 1fr; text-align: center;">
+                <div class="about-text">
+                    <h2>De uma partida com os amigos...</h2>
+                    <p>A piada surgiu em um dia comum, quando nosso grupo de amigos estava jogando videogame online. Um de nós resolveu colocar o nickname in-game como <strong>"Betoneira"</strong>. Não teve um porquê heroico ou poético — foi algo extremamente aleatório.</p>
+                    
+                    <div class="about-highlight" style="margin: 2rem auto; text-align: left; max-width: 600px; border-radius: var(--radius-md);">
+                        "Foi algo simples, mas que até hoje arranca risadas sinceras e muita zoeira."
+                    </div>
+                    
+                    <p>A piada foi tão longe e a zoeira tão duradoura que, quando decidimos abrir nosso negócio de suplementos focados num "shape de obra", o nome não poderia ser outro.</p>
+                    <p>Hoje a <strong>Betoneira Suplementos</strong> é mais do que só matérias-primas de alta potência... é um lembrete de que as melhores coisas nascem de tardes jogando junto com a galera.</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

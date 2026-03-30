@@ -1,36 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-:root {
-    --primary-orange: #FF9428;
-    --btn-orange: #D84101;
-    --text-color: #333;
-    --input-bg: #EAEAEA;
-    --link-blue: #0056b3;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Inter', sans-serif;
-}
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('/css/style.css'); /* Import to get variables */
 
 body {
-    background-color: #f7f7f7;
-    min-height: 100vh;
+    background-color: var(--color-background);
+    color: var(--color-text-main);
 }
 
+/* We hide the old top bar from the auth pages since we are using the new universal navbar */
 .top-bar {
+    display: none;
+}
+
+.auth-page-container {
     width: 100%;
-    height: 80px;
-    background-color: var(--primary-orange);
+    min-height: calc(100vh - 80px); /* Fill screen minus navbar */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    margin-top: 80px;
+    background-image: radial-gradient(circle at top right, rgba(255, 148, 40, 0.05), transparent 400px), 
+                      radial-gradient(circle at bottom left, rgba(216, 65, 1, 0.05), transparent 400px);
 }
 
 .auth-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem;
+    width: 100%;
     max-width: 450px;
     margin: 0 auto;
 }
@@ -40,21 +34,31 @@ body {
     text-align: center;
 }
 
+.logo-wrapper a {
+    display: inline-block;
+    transition: var(--transition-all);
+}
+
+.logo-wrapper a:hover {
+    transform: scale(1.05);
+}
+
 .logo-wrapper img {
-    max-width: 180px;
+    max-width: 200px;
     height: auto;
-    filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.1));
+    filter: drop-shadow(0px 8px 16px rgba(0,0,0,0.1));
 }
 
 .auth-form {
     width: 100%;
-    background: #fff;
+    background: var(--color-surface);
     padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    border: 1px solid var(--color-border);
 }
 
 .form-group {
@@ -74,71 +78,79 @@ body {
 
 .input-control {
     width: 100%;
-    padding: 0.9rem 1.2rem;
-    border: none;
-    background-color: var(--input-bg);
-    border-radius: 8px;
-    font-size: 0.95rem;
-    color: #444;
-    transition: all 0.3s ease;
-    border: 1px solid transparent;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface-muted);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    color: var(--color-text-main);
+    transition: var(--transition-all);
+    font-family: var(--font-family-main);
+}
+
+.input-control::placeholder {
+    color: var(--color-text-light);
 }
 
 .input-control:focus {
     outline: none;
-    background-color: #fff;
-    border-color: var(--primary-orange);
-    color: #000;
-    box-shadow: 0 0 0 4px rgba(255, 148, 40, 0.1);
+    background-color: var(--color-surface);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(255, 148, 40, 0.15);
 }
 
 .gender-container {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
     margin: 0.5rem 0;
+    padding: 1rem;
+    background-color: var(--color-surface-muted);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
 }
 
 .gender-options {
     display: flex;
-    gap: 1.5rem;
+    justify-content: space-between;
     align-items: center;
 }
 
 .gender-option {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-    font-size: 0.9rem;
-    color: #555;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--color-text-main);
     cursor: pointer;
+    font-weight: 500;
 }
 
 .gender-option input[type="radio"] {
-    accent-color: var(--btn-orange);
+    accent-color: var(--color-primary-dark);
     width: 18px;
     height: 18px;
+    cursor: pointer;
 }
 
 .btn-auth {
     width: 100%;
-    padding: 1rem;
-    background-color: var(--btn-orange);
+    padding: 1.1rem;
+    background-color: var(--color-primary);
     color: #fff;
     border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
+    border-radius: var(--radius-md);
+    font-size: 1.05rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: var(--transition-all);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 0.5rem;
-    box-shadow: 0 4px 15px rgba(216, 65, 1, 0.3);
+    letter-spacing: 0.05em;
+    margin-top: 1rem;
+    box-shadow: 0 4px 15px rgba(255, 148, 40, 0.3);
 }
 
 .btn-auth:hover {
-    background-color: #bf3a01;
+    background-color: var(--color-primary-dark);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(216, 65, 1, 0.4);
 }
@@ -152,35 +164,34 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    margin-top: 1.5rem;
+    margin-top: 1rem;
 }
 
 .auth-link {
-    color: var(--link-blue);
+    color: var(--color-text-muted);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     font-weight: 500;
-    transition: color 0.2s;
+    transition: var(--transition-all);
 }
 
 .auth-link:hover {
-    color: #003d82;
+    color: var(--color-primary-dark);
     text-decoration: underline;
 }
 
-label {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #666;
-    margin-left: 0.2rem;
-}
-
 /* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+@keyframes fadeInScale {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px) scale(0.98); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
 }
 
 .auth-form {
-    animation: fadeIn 0.5s ease-out forwards;
+    animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

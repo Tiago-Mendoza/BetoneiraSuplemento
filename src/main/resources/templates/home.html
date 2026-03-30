@@ -1,166 +1,109 @@
 <!DOCTYPE html>
-<html lang="pt" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>Betoneira Suplementos</title>
-	<meta charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-	<meta name="description" content="Betoneira Suplementos - A sua loja de suplementos" />
-	<meta name="author" content="Betoneira Suplementos" />
-	<link rel="icon" href="/image/favicon.png" />
-
-	<!-- Google Fonts -->
-	<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
-	
-	<!-- Bootstrap core CSS -->
-	<link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-	
-	<!-- Custom styles for this template -->
-	<link href="/css/style.css" rel="stylesheet" />
+    <title>Home - Betoneira Suplementos</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/image/favicon.png" />
+    <link href="/css/style.css" rel="stylesheet" />
 </head>
 <body>
-	<header>
-		<nav class="navbar custom-navbar fixed-top">
-			<div class="container container-navbar">
-				<div class="custom-nav-group">
-					<a class="navbar-brand me-4" href="/">
-						<img src="/image/BetoneiraSuplementos 3.png" alt="Betoneira Suplementos">
-					</a>
-					<a class="nav-link text-white link-produtos" href="#">Produtos</a>
-				</div>
-				
-				<div class="custom-nav-group">
-					<a class="nav-link text-white login-link" href="/login">Login</a>
-				</div>
-			</div>
-		</nav>
-	</header>
-	
-	<main class="main-content">
-		<div class="container mt-5 pt-4">
-			<div class="product-grid">
-				<!-- Product 1: Amendoim ISO -->
-				<div class="product-card">
-					<div class="product-image-container">
-						<img src="/image/WHEYAMENDOIMISO-removebg-preview.png" alt="Whey Protein Amendoim ISO" class="product-image">
-					</div>
-					<div class="product-info">
-						<h3 class="product-title">Whey Betoneira</h3>
-						<p class="product-subtitle">Amendoim ISO</p>
-						<p class="product-weight">900g</p>
-						<p class="product-price">R$119,99</p>
-					</div>
-				</div>
+    
+    <!-- Universal Navbar -->
+    <nav class="custom-navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos">
+            </a>
 
-				<!-- Product 2: Chocolate -->
-				<div class="product-card">
-					<div class="product-image-container">
-						<img src="/image/WHEYCHOCOL-removebg-preview.png" alt="Whey Protein Chocolate" class="product-image">
-					</div>
-					<div class="product-info">
-						<h3 class="product-title">Whey Betoneira</h3>
-						<p class="product-subtitle">Chocolate</p>
-						<p class="product-weight">900g</p>
-						<p class="product-price">R$119,99</p>
-					</div>
-				</div>
+            <div class="navbar-links">
+                <a class="nav-link active" th:href="@{/home}">Home</a>
+                <a class="nav-link" th:href="@{/produtos}">Produtos</a>
+                <a class="nav-link" th:href="@{/sobre-nos}">Sobre nós</a>
+            </div>
 
-				<!-- Product 3: Coco -->
-				<div class="product-card">
-					<div class="product-image-container">
-						<img src="/image/WHEYCOCO-removebg-preview.png" alt="Whey Protein Coco" class="product-image">
-					</div>
-					<div class="product-info">
-						<h3 class="product-title">Whey Betoneira</h3>
-						<p class="product-subtitle">Coco</p>
-						<p class="product-weight">900g</p>
-						<p class="product-price">R$119,99</p>
-					</div>
-				</div>
+            <div class="navbar-icons">
+                <a class="nav-icon" href="#">
+                    <img th:src="@{/image/Lupa.png}" alt="Buscar">
+                </a>
+                <a class="nav-icon" th:href="@{/carrinho}">
+                    <img th:src="@{/image/CarCompras.png}" alt="Carrinho de Compras">
+                </a>
+                <a class="nav-icon" th:href="@{/login}">
+                    <img th:src="@{/image/Seta.png}" alt="Login">
+                </a>
+            </div>
+        </div>
+    </nav>
 
-				<!-- Product 4: Cookies -->
-				<div class="product-card">
-					<div class="product-image-container">
-						<img src="/image/WHEYCOOKIES-removebg-preview.png" alt="Whey Protein Cookies" class="product-image">
-					</div>
-					<div class="product-info">
-						<h3 class="product-title">Whey Betoneira</h3>
-						<p class="product-subtitle">Cookies</p>
-						<p class="product-weight">900g</p>
-						<p class="product-price">R$119,99</p>
-					</div>
-				</div>
+    <!-- Main Content -->
+    <main style="padding-top: 0; padding-left: 0; padding-right: 0; align-items: stretch;">
+        
+        <!-- Hero Banner Section -->
+        <section class="home-banner" style="width: 100%; display: flex; justify-content: center; background-color: #111;">
+            <a th:href="@{/produtos}" style="display: block; width: 100%; max-width: 1920px; text-decoration: none; position: relative;">
+                <img th:src="@{/image/BannerHome1.png}" alt="Banner Promocional Betoneira" style="width: 100%; height: auto; display: block; object-fit: cover;">
+                <div class="banner-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor: pointer;"></div>
+            </a>
+        </section>
 
-				<!-- Product 5: Frutas Vermelhas -->
-				<div class="product-card">
-					<div class="product-image-container">
-						<img src="/image/WHEYFRUTAS-removebg-preview.png" alt="Whey Protein Frutas Vermelhas" class="product-image">
-					</div>
-					<div class="product-info">
-						<h3 class="product-title">Whey Betoneira</h3>
-						<p class="product-subtitle">Frutas Vermelhas</p>
-						<p class="product-weight">900g</p>
-						<p class="product-price">R$119,99</p>
-					</div>
-				</div>
+        <!-- Container for Grid -->
+        <div class="container" style="margin: 0 auto; padding: 0 1.5rem;">
+            
+            <h2 id="produtos" style="text-align: center; font-size: 2.5rem; font-weight: 800; color: #000; text-transform: uppercase; margin: 4rem 0 2rem 0; letter-spacing: -1px;">Produtos mais vendidos</h2>
 
-				<!-- Product 6: Morango -->
-				<div class="product-card">
-					<div class="product-image-container">
-						<img src="/image/WHEYMORANGO-removebg-preview.png" alt="Whey Protein Morango" class="product-image">
-					</div>
-					<div class="product-info">
-						<h3 class="product-title">Whey Betoneira</h3>
-						<p class="product-subtitle">Morango</p>
-						<p class="product-weight">900g</p>
-						<p class="product-price">R$119,99</p>
-					</div>
-				</div>
+            <!-- Product Grid: 3 Items Max -->
+            <div class="product-grid" style="grid-template-columns: repeat(3, 1fr);">
+                
+                <!-- Product 1: Whey Chocolate -->
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img th:src="@{/image/WHEYCHOCOL-removebg-preview.png}" alt="Whey Protein Chocolate">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Whey</h3>
+                        <p class="product-subtitle">Sabor Chocolate</p>
+                        <span class="product-weight">900g</span>
+                        <p class="product-price">R$ 119,99</p>
+                        <button class="btn-buy" onclick="window.location.href='/carrinho'">Adicionar ao carrinho</button>
+                    </div>
+                </div>
 
-				<!-- Product 7: Creatina em Pó -->
-				<div class="product-card">
-					<div class="product-image-container">
-						<img src="/image/CREATINAEMPÓ-removebg-preview.png" alt="Creatina em Pó" class="product-image">
-					</div>
-					<div class="product-info">
-						<h3 class="product-title">Creatina Betoneira</h3>
-						<p class="product-subtitle">Em Pó</p>
-						<p class="product-weight">300g</p>
-						<p class="product-price">R$119,99</p>
-					</div>
-				</div>
+                <!-- Product 2: Creatina em Pó -->
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img th:src="@{/image/CREATINAEMPÓ-removebg-preview.png}" alt="Creatina em Pó">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Creatina</h3>
+                        <p class="product-subtitle">Ouro em Pó</p>
+                        <span class="product-weight">300g</span>
+                        <p class="product-price">R$ 119,99</p>
+                        <button class="btn-buy" onclick="window.location.href='/carrinho'">Adicionar ao carrinho</button>
+                    </div>
+                </div>
 
-				<!-- Product 8: Creatina Micronizada -->
-				<div class="product-card">
-					<div class="product-image-container">
-						<img src="/image/CREATINAMICRONIZADA-removebg-preview.png" alt="Creatina Micronizada" class="product-image">
-					</div>
-					<div class="product-info">
-						<h3 class="product-title">Creatina Betoneira</h3>
-						<p class="product-subtitle">Micronizada</p>
-						<p class="product-weight">300g</p>
-						<p class="product-price">R$119,99</p>
-					</div>
-				</div>
+                <!-- Product 3: Creatina Micronizada -->
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <img th:src="@{/image/CREATINAMICRONIZADA-removebg-preview.png}" alt="Creatina Micronizada">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Creatina</h3>
+                        <p class="product-subtitle">Micronizada</p>
+                        <span class="product-weight">300g</span>
+                        <p class="product-price">R$ 119,99</p>
+                        <button class="btn-buy" onclick="window.location.href='/carrinho'">Adicionar ao carrinho</button>
+                    </div>
+                </div>
 
-				<!-- Product 9: Creatina Miro -->
-				<div class="product-card">
-					<div class="product-image-container">
-						<img src="/image/CREATINAMIRO-removebg-preview.png" alt="Creatina Miro" class="product-image">
-					</div>
-					<div class="product-info">
-						<h3 class="product-title">Creatina Betoneira</h3>
-						<p class="product-subtitle">Miro Pure</p>
-						<p class="product-weight">300g</p>
-						<p class="product-price">R$119,99</p>
-					</div>
-				</div>
-			</div>
-		</div>
-	</main>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a th:href="@{/produtos}" style="display: inline-block; padding: 1rem 3rem; background: transparent; color: var(--color-black); border: 2px solid var(--color-black); border-radius: 8px; font-weight: 700; text-transform: uppercase; text-decoration: none; transition: 0.3s;">Ver todos os produtos</a>
+            </div>
 
-	<!-- Scripts -->
-	<script src="/webjars/jquery/jquery.min.js"></script>
-	<script src="/webjars/bootstrap/js/bootstrap.bundle.min.js"></script>
+        </div>
+    </main>
 </body>
 </html>

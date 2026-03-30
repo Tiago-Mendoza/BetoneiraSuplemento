@@ -4,35 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Betoneira Suplementos</title>
+    <link rel="icon" th:href="@{/image/favicon.png}" />
     <link rel="stylesheet" th:href="@{/css/premium-auth.css}">
 </head>
 <body>
-    <div class="top-bar"></div>
-    
-    <div class="auth-container">
-        <div class="logo-wrapper">
-            <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos Logo">
+
+    <!-- Universal Navbar -->
+    <nav class="custom-navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos">
+            </a>
+
+            <div class="navbar-links">
+                <a class="nav-link" th:href="@{/home}">Home</a>
+                <a class="nav-link" th:href="@{/produtos}">Produtos</a>
+                <a class="nav-link" th:href="@{/sobre-nos}">Sobre nós</a>
+            </div>
+
+            <div class="navbar-icons">
+                <a class="nav-icon" href="#">
+                    <img th:src="@{/image/Lupa.png}" alt="Buscar">
+                </a>
+                <a class="nav-icon" th:href="@{/carrinho}">
+                    <img th:src="@{/image/CarCompras.png}" alt="Carrinho de Compras">
+                </a>
+                <a class="nav-icon active" th:href="@{/login}">
+                    <img th:src="@{/image/Seta.png}" alt="Login">
+                </a>
+            </div>
         </div>
-
-        <form class="auth-form" th:action="@{/login}" method="POST">
-            <div class="form-group">
-                <input type="email" id="email" name="email" class="input-control" placeholder="Ex: Email@mail.com" required>
+    </nav>
+    
+    <div class="auth-page-container">
+        <div class="auth-container">
+            <!-- Clicable Logo Redirecting to Home -->
+            <div class="logo-wrapper">
+                <a th:href="@{/home}">
+                    <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos Logo">
+                </a>
             </div>
 
-            <div class="form-group">
-                <input type="password" id="password" name="password" class="input-control" placeholder="Adicionar Senha" required>
-            </div>
+            <form class="auth-form" th:action="@{/login}" method="POST">
+                <div class="form-group">
+                    <input type="email" id="email" name="email" class="input-control" placeholder="Ex: Email@mail.com" required>
+                </div>
 
-            <div class="auth-links" style="margin-top: 0;">
-                <a href="#" class="auth-link">Esqueci minha senha</a>
-            </div>
+                <div class="form-group">
+                    <input type="password" id="password" name="password" class="input-control" placeholder="Adicionar Senha" required>
+                </div>
 
-            <button type="submit" class="btn-auth">Entrar</button>
+                <div class="auth-links" style="margin-top: 0;">
+                    <a href="#" class="auth-link">Esqueci minha senha</a>
+                </div>
 
-            <div class="auth-links">
-                <a th:href="@{/cadastro}" class="auth-link">Cadastre-se</a>
-            </div>
-        </form>
+                <button type="submit" class="btn-auth">Entrar</button>
+
+                <div class="auth-links">
+                    <a th:href="@{/cadastro}" class="auth-link">Cadastre-se</a>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>

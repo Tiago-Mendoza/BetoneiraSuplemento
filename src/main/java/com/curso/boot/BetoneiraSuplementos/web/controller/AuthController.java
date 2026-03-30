@@ -20,4 +20,19 @@ public class AuthController {
     public String cadastro() {
         return "cadastro";
     }   
+
+    @GetMapping("/carrinho")
+    public String carrinho() {
+        return "carrinho";
+    }
+
+    @GetMapping("/sobre-nos")
+    public String sobreNos() {
+        return "sobre-nos";
+    }
+
+    @GetMapping("/produtos")
+    public String produtos() {
+        return "produtos";
+    }
 }

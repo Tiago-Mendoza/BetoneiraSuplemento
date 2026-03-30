@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Carrinho - Betoneira Suplementos</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/image/favicon.png" />
+    <link href="/css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+
+    <!-- Universal Navbar -->
+    <nav class="custom-navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos">
+            </a>
+
+            <div class="navbar-links">
+                <a class="nav-link" th:href="@{/home}">Home</a>
+                <a class="nav-link" th:href="@{/produtos}">Produtos</a>
+                <a class="nav-link" th:href="@{/sobre-nos}">Sobre nós</a>
+            </div>
+
+            <div class="navbar-icons">
+                <a class="nav-icon" href="#">
+                    <img th:src="@{/image/Lupa.png}" alt="Buscar">
+                </a>
+                <a class="nav-icon" th:href="@{/carrinho}">
+                    <img th:src="@{/image/CarCompras.png}" alt="Carrinho de Compras">
+                </a>
+                <a class="nav-icon" th:href="@{/login}">
+                    <img th:src="@{/image/Seta.png}" alt="Login">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <h1 class="page-title">Meu Carrinho</h1>
+
+            <div class="cart-container">
+                <!-- Cart Items List -->
+                <div class="cart-items">
+
+                    <!-- Item 1 -->
+                    <div class="cart-item">
+                        <div class="cart-item-img-container">
+                            <img th:src="@{/image/WHEYCHOCOL-removebg-preview.png}" alt="Whey Chocolate">
+                        </div>
+                        <div class="cart-item-details">
+                            <h3 class="cart-item-title">Whey</h3>
+                            <p class="cart-item-desc">Sabor Chocolate • 900g</p>
+                            <span class="product-weight">Em estoque</span>
+                        </div>
+                        <div class="cart-item-actions">
+                            <div class="qty-control">
+                                <button class="qty-btn"
+                                    onclick="const qtyEl = this.nextElementSibling; if(qtyEl.value > 1) qtyEl.value--">-</button>
+                                <input class="qty-input" type="number" value="1" min="1" readonly>
+                                <button class="qty-btn" onclick="this.previousElementSibling.value++">+</button>
+                            </div>
+                            <div class="cart-item-price">R$ 119,99</div>
+                            <button class="btn-remove">Remover</button>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="cart-item">
+                        <div class="cart-item-img-container">
+                            <img th:src="@{/image/CREATINAEMPÓ-removebg-preview.png}" alt="Creatina">
+                        </div>
+                        <div class="cart-item-details">
+                            <h3 class="cart-item-title">Creatina</h3>
+                            <p class="cart-item-desc">Pura Micronizada • 300g</p>
+                            <span class="product-weight">Em estoque</span>
+                        </div>
+                        <div class="cart-item-actions">
+                            <div class="qty-control">
+                                <button class="qty-btn"
+                                    onclick="const qtyEl2 = this.nextElementSibling; if(qtyEl2.value > 1) qtyEl2.value--">-</button>
+                                <input class="qty-input" type="number" value="2" min="1" readonly>
+                                <button class="qty-btn" onclick="this.previousElementSibling.value++">+</button>
+                            </div>
+                            <div class="cart-item-price">R$ 239,98</div>
+                            <button class="btn-remove">Remover</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Cart Summary -->
+                <div class="cart-summary">
+                    <h2 class="summary-title">Resumo do Pedido</h2>
+
+                    <div class="summary-row">
+                        <span>Subtotal (3 itens)</span>
+                        <span>R$ 359,97</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Frete Expresso</span>
+                        <span>R$ 25,00</span>
+                    </div>
+
+                    <div class="summary-total">
+                        <span>Total:</span>
+                        <span>R$ 384,97</span>
+                    </div>
+
+                    <button class="btn-checkout" onclick="window.location.href='/login'">Finalizar Compra</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+
+</html>

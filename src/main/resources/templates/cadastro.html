@@ -4,66 +4,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Betoneira Suplementos</title>
+    <link rel="icon" th:href="@{/image/favicon.png}" />
     <link rel="stylesheet" th:href="@{/css/premium-auth.css}">
 </head>
 <body>
-    <div class="top-bar"></div>
-    
-    <div class="auth-container" style="max-width: 500px;">
-        <div class="logo-wrapper">
-            <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos Logo">
+
+    <!-- Universal Navbar -->
+    <nav class="custom-navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos">
+            </a>
+
+            <div class="navbar-links">
+                <a class="nav-link" th:href="@{/home}">Home</a>
+                <a class="nav-link" th:href="@{/produtos}">Produtos</a>
+                <a class="nav-link" th:href="@{/sobre-nos}">Sobre nós</a>
+            </div>
+
+            <div class="navbar-icons">
+                <a class="nav-icon" href="#">
+                    <img th:src="@{/image/Lupa.png}" alt="Buscar">
+                </a>
+                <a class="nav-icon" th:href="@{/carrinho}">
+                    <img th:src="@{/image/CarCompras.png}" alt="Carrinho de Compras">
+                </a>
+                <a class="nav-icon active" th:href="@{/login}">
+                    <img th:src="@{/image/Seta.png}" alt="Login">
+                </a>
+            </div>
         </div>
-
-        <form class="auth-form" th:action="@{/cadastro}" method="POST">
-            <div class="form-group">
-                <input type="email" id="email" name="email" class="input-control" placeholder="Ex: Email@mail.com" required>
+    </nav>
+    
+    <div class="auth-page-container">
+        <div class="auth-container" style="max-width: 500px;">
+            <!-- Clicable Logo Redirecting to Home -->
+            <div class="logo-wrapper">
+                <a th:href="@{/home}">
+                    <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos Logo">
+                </a>
             </div>
 
-            <div class="form-group">
-                <input type="text" id="cpf" name="cpf" class="input-control" placeholder="CPF" required>
-            </div>
-
-            <div class="form-group">
-                <input type="text" id="nome" name="nome" class="input-control" placeholder="Nome Completo" required>
-            </div>
-
-            <div class="form-group">
-                <input type="text" id="dataNascimento" name="dataNascimento" class="input-control" placeholder="Data de nascimento" onfocus="(this.type='date')" required>
-            </div>
-
-            <div class="form-row">
+            <form class="auth-form" th:action="@{/cadastro}" method="POST">
                 <div class="form-group">
-                    <input type="tel" id="telefoneCelular" name="telefoneCelular" class="input-control" placeholder="Telefone celular*" required>
+                    <input type="email" id="email" name="email" class="input-control" placeholder="Ex: Email@mail.com" required>
                 </div>
+
                 <div class="form-group">
-                    <input type="tel" id="telefoneFixo" name="telefoneFixo" class="input-control" placeholder="Telefone fixo">
+                    <input type="text" id="cpf" name="cpf" class="input-control" placeholder="CPF" required>
                 </div>
-            </div>
 
-            <div class="gender-container">
-                <div class="gender-options">
-                    <label class="gender-option">
-                        <input type="radio" name="genero" value="Masculino" required> Masculino
-                    </label>
-                    <label class="gender-option">
-                        <input type="radio" name="genero" value="Feminino"> Feminino
-                    </label>
-                    <label class="gender-option">
-                        <input type="radio" name="genero" value="Outro"> Outro
-                    </label>
+                <div class="form-group">
+                    <input type="text" id="nome" name="nome" class="input-control" placeholder="Nome Completo" required>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <input type="password" id="password" name="password" class="input-control" placeholder="Criar senha (6 dígitos)" maxlength="6" minlength="6" required>
-            </div>
+                <div class="form-group">
+                    <input type="text" id="dataNascimento" name="dataNascimento" class="input-control" placeholder="Data de nascimento" onfocus="(this.type='date')" required>
+                </div>
 
-            <button type="submit" class="btn-auth">Cadastrar</button>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="tel" id="telefoneCelular" name="telefoneCelular" class="input-control" placeholder="Telefone celular*" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="telefoneFixo" name="telefoneFixo" class="input-control" placeholder="Telefone fixo">
+                    </div>
+                </div>
 
-            <div class="auth-links">
-                <a th:href="@{/login}" class="auth-link">Voltar para o Login</a>
-            </div>
-        </form>
+                <div class="gender-container">
+                    <div class="gender-options">
+                        <label class="gender-option">
+                            <input type="radio" name="genero" value="Masculino" required> Masculino
+                        </label>
+                        <label class="gender-option">
+                            <input type="radio" name="genero" value="Feminino"> Feminino
+                        </label>
+                        <label class="gender-option">
+                            <input type="radio" name="genero" value="Outro"> Outro
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" id="password" name="password" class="input-control" placeholder="Criar senha (6 dígitos)" maxlength="6" minlength="6" required>
+                </div>
+
+                <button type="submit" class="btn-auth">Cadastrar</button>
+
+                <div class="auth-links">
+                    <a th:href="@{/login}" class="auth-link">Já tem conta? Entrar</a>
+                </div>
+            </form>
+        </div>
     </div>
 </body>
 </html>
