@@ -1,0 +1,34 @@
+[ {
+  "id" : "551e5bd3-cba5-4ac0-ba06-176f177feb3f",
+  "email" : "christianfleite68@gmail.com",
+  "cpf" : "11122233344",
+  "nome" : "Christian Felix",
+  "dataNascimento" : "2022-02-02",
+  "telefoneCelular" : "1190028922",
+  "telefoneFixo" : null,
+  "genero" : "Masculino",
+  "passwordHash" : "$2a$10$PNoE25H1uk0wnwvtvgaCc.Mi9k03ks4xsXbOsoxbPh9p8hYjLTAYK",
+  "roles" : [ "USER" ]
+}, {
+  "id" : "97d20eb3-5c93-469c-bbd1-76bf83e95840",
+  "email" : "checkout7227@betoneira.com",
+  "cpf" : "12345678901",
+  "nome" : "Usuario Checkout",
+  "dataNascimento" : "2000-01-01",
+  "telefoneCelular" : "11999999999",
+  "telefoneFixo" : "1133334444",
+  "genero" : "Masculino",
+  "passwordHash" : "$2a$10$/FO/9jTjQLadMirgtK9uY.zQo.S9KISx0RG8QRvzS/4O0UCg/lUia",
+  "roles" : [ "USER" ]
+}, {
+  "id" : "9a3b21bd-a017-4868-bb8d-d8d9af1fb063",
+  "email" : "admin@betoneira.com",
+  "cpf" : null,
+  "nome" : "Administrador",
+  "dataNascimento" : null,
+  "telefoneCelular" : null,
+  "telefoneFixo" : null,
+  "genero" : null,
+  "passwordHash" : "$2a$10$Q8XHiLv2xQeSTfHdmoCDFey4vyv1BnRe0yq0L1xYxY52zz8s6fHRy",
+  "roles" : [ "ADMIN", "USER" ]
+} ]

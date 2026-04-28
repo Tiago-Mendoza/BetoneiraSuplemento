@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Checkout - Betoneira Suplementos</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/image/favicon.png" />
+    <link href="/css/style.css" rel="stylesheet" />
+</head>
+<body>
+
+    <nav class="custom-navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos">
+            </a>
+
+            <div class="navbar-links">
+                <a class="nav-link" th:href="@{/home}">Home</a>
+                <a class="nav-link" th:href="@{/produtos}">Produtos</a>
+                <a class="nav-link" th:href="@{/sobre-nos}">Sobre nós</a>
+            </div>
+
+            <div class="navbar-icons">
+                <a class="nav-icon" href="#">
+                    <img th:src="@{/image/Lupa.png}" alt="Buscar">
+                </a>
+                <a class="nav-icon" th:href="@{/carrinho}">
+                    <img th:src="@{/image/CarCompras.png}" alt="Carrinho de Compras">
+                </a>
+                <a class="nav-icon" th:href="@{/login}">
+                    <img th:src="@{/image/Seta.png}" alt="Login">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <h1 class="page-title">Checkout</h1>
+
+            <div class="checkout-layout">
+                <section class="checkout-panel">
+                    <div class="checkout-section">
+                        <h2 class="checkout-title">Entrega</h2>
+                        <p class="checkout-customer" th:text="${customerEmail}"></p>
+                    </div>
+
+                    <form class="checkout-form" th:action="@{/checkout/finalizar}" th:object="${checkoutForm}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                        <div class="checkout-grid">
+                            <div class="form-group">
+                                <label class="checkout-label" for="recipientName">Destinatário</label>
+                                <input
+                                    id="recipientName"
+                                    th:field="*{recipientName}"
+                                    class="input-control"
+                                    th:classappend="${#fields.hasErrors('recipientName')} ? ' input-error' : ''"
+                                    autocomplete="name"
+                                    required
+                                >
+                                <p class="field-error" th:if="${#fields.hasErrors('recipientName')}" th:errors="*{recipientName}"></p>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkout-label" for="zipCode">CEP</label>
+                                <input
+                                    id="zipCode"
+                                    th:field="*{zipCode}"
+                                    class="input-control"
+                                    th:classappend="${#fields.hasErrors('zipCode')} ? ' input-error' : ''"
+                                    inputmode="numeric"
+                                    required
+                                >
+                                <p class="field-error" th:if="${#fields.hasErrors('zipCode')}" th:errors="*{zipCode}"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkout-label" for="street">Logradouro</label>
+                            <input
+                                id="street"
+                                th:field="*{street}"
+                                class="input-control"
+                                th:classappend="${#fields.hasErrors('street')} ? ' input-error' : ''"
+                                autocomplete="address-line1"
+                                required
+                            >
+                            <p class="field-error" th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></p>
+                        </div>
+
+                        <div class="checkout-grid checkout-grid-3">
+                            <div class="form-group">
+                                <label class="checkout-label" for="number">Número</label>
+                                <input
+                                    id="number"
+                                    th:field="*{number}"
+                                    class="input-control"
+                                    th:classappend="${#fields.hasErrors('number')} ? ' input-error' : ''"
+                                    required
+                                >
+                                <p class="field-error" th:if="${#fields.hasErrors('number')}" th:errors="*{number}"></p>
+                            </div>
+
+                            <div class="form-group checkout-grid-span-2">
+                                <label class="checkout-label" for="complement">Complemento</label>
+                                <input id="complement" th:field="*{complement}" class="input-control" autocomplete="address-line2">
+                            </div>
+                        </div>
+
+                        <div class="checkout-grid checkout-grid-3">
+                            <div class="form-group">
+                                <label class="checkout-label" for="neighborhood">Bairro</label>
+                                <input
+                                    id="neighborhood"
+                                    th:field="*{neighborhood}"
+                                    class="input-control"
+                                    th:classappend="${#fields.hasErrors('neighborhood')} ? ' input-error' : ''"
+                                    required
+                                >
+                                <p class="field-error" th:if="${#fields.hasErrors('neighborhood')}" th:errors="*{neighborhood}"></p>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkout-label" for="city">Cidade</label>
+                                <input
+                                    id="city"
+                                    th:field="*{city}"
+                                    class="input-control"
+                                    th:classappend="${#fields.hasErrors('city')} ? ' input-error' : ''"
+                                    required
+                                >
+                                <p class="field-error" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></p>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkout-label" for="state">Estado</label>
+                                <input
+                                    id="state"
+                                    th:field="*{state}"
+                                    class="input-control"
+                                    th:classappend="${#fields.hasErrors('state')} ? ' input-error' : ''"
+                                    maxlength="30"
+                                    required
+                                >
+                                <p class="field-error" th:if="${#fields.hasErrors('state')}" th:errors="*{state}"></p>
+                            </div>
+                        </div>
+
+                        <div class="checkout-section">
+                            <h2 class="checkout-title">Pagamento</h2>
+                            <div class="payment-options">
+                                <label class="payment-option">
+                                    <input type="radio" th:field="*{paymentMethod}" value="Cartão de Crédito" required>
+                                    <span>Cartão de Crédito</span>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" th:field="*{paymentMethod}" value="PIX">
+                                    <span>PIX</span>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" th:field="*{paymentMethod}" value="Boleto">
+                                    <span>Boleto</span>
+                                </label>
+                            </div>
+                            <p class="field-error" th:if="${#fields.hasErrors('paymentMethod')}" th:errors="*{paymentMethod}"></p>
+                        </div>
+
+                        <div class="checkout-actions">
+                            <a class="secondary-link" th:href="@{/carrinho}">Voltar ao carrinho</a>
+                            <button type="submit" class="btn-checkout">Confirmar pedido</button>
+                        </div>
+                    </form>
+                </section>
+
+                <aside class="cart-summary checkout-summary">
+                    <h2 class="summary-title">Resumo do Pedido</h2>
+
+                    <div class="checkout-summary-items">
+                        <div class="checkout-summary-item" th:each="item : ${cart.items}">
+                            <div>
+                                <strong th:text="${item.product.name}"></strong>
+                                <p th:text="${item.product.displayDescription}"></p>
+                            </div>
+                            <div class="checkout-summary-qty-price">
+                                <span th:text="${'x' + item.quantity}"></span>
+                                <strong th:text="${item.formattedLineTotal}"></strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="summary-row">
+                        <span th:text="${'Subtotal (' + cart.itemsLabel + ')'}"></span>
+                        <span th:text="${cart.formattedSubtotal}"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Frete Expresso</span>
+                        <span th:text="${cart.formattedShipping}"></span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Total:</span>
+                        <span th:text="${cart.formattedTotal}"></span>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

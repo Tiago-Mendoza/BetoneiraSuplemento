@@ -99,6 +99,35 @@ body {
     box-shadow: 0 0 0 4px rgba(255, 148, 40, 0.15);
 }
 
+.input-error {
+    border-color: var(--color-primary-dark);
+    background-color: #fff7f3;
+}
+
+.field-error {
+    font-size: 0.85rem;
+    color: var(--color-primary-dark);
+}
+
+.auth-message {
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.auth-message-success {
+    background: rgba(22, 163, 74, 0.12);
+    color: var(--color-success);
+    border: 1px solid rgba(22, 163, 74, 0.22);
+}
+
+.auth-message-error {
+    background: rgba(216, 65, 1, 0.08);
+    color: var(--color-primary-dark);
+    border: 1px solid rgba(216, 65, 1, 0.18);
+}
+
 .gender-container {
     display: flex;
     flex-direction: column;

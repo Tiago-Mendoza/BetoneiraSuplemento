@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Pedidos</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/image/favicon.png" />
+    <link href="/css/style.css" rel="stylesheet" />
+</head>
+<body>
+
+    <nav class="custom-navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos">
+            </a>
+
+            <div class="navbar-links">
+                <a class="nav-link" th:href="@{/home}">Home</a>
+                <a class="nav-link" th:href="@{/meus-pedidos}">Meus pedidos</a>
+                <a class="nav-link active" th:href="@{/admin/pedidos}">Admin</a>
+            </div>
+
+            <div class="navbar-icons">
+                <form th:action="@{/logout}" method="post" class="nav-logout-form">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit" class="nav-icon nav-icon-button">
+                        <img th:src="@{/image/Seta.png}" alt="Sair">
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <h1 class="page-title">Pedidos</h1>
+                    <p class="section-subtitle">Painel administrativo com CRUD de pedidos</p>
+                </div>
+                <a class="btn-checkout checkout-success-button" th:href="@{/admin/pedidos/novo}">Novo pedido</a>
+            </div>
+
+            <div class="admin-switcher">
+                <a class="admin-switch-link is-active" th:href="@{/admin/pedidos}">Pedidos</a>
+                <a class="admin-switch-link" th:href="@{/admin/produtos}">Produtos</a>
+            </div>
+
+            <div class="page-message page-message-success" th:if="${param.created}">
+                Pedido criado com sucesso.
+            </div>
+
+            <div class="page-message page-message-info" th:if="${param.updated}">
+                Pedido atualizado com sucesso.
+            </div>
+
+            <div class="page-message page-message-info" th:if="${param.deleted}">
+                Pedido removido com sucesso.
+            </div>
+
+            <div class="admin-table-wrapper" th:if="${!#lists.isEmpty(orders)}">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Pedido</th>
+                            <th>Cliente</th>
+                            <th>Status</th>
+                            <th>Origem</th>
+                            <th>Total</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="order : ${orders}">
+                            <td>
+                                <strong th:text="${order.orderNumber}"></strong>
+                            </td>
+                            <td th:text="${order.customerEmail}"></td>
+                            <td>
+                                <span class="order-status-badge" th:text="${order.status}"></span>
+                            </td>
+                            <td th:text="${order.source}"></td>
+                            <td th:text="${order.formattedTotal}"></td>
+                            <td th:text="${order.formattedCreatedAt}"></td>
+                            <td>
+                                <div class="admin-actions">
+                                    <a class="admin-action-link" th:href="@{/admin/pedidos/{orderNumber}(orderNumber=${order.orderNumber})}">
+                                        Editar
+                                    </a>
+                                    <form th:action="@{/admin/pedidos/{orderNumber}/remover(orderNumber=${order.orderNumber})}" method="post">
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                        <button type="submit" class="admin-action-button">Excluir</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="empty-state" th:if="${#lists.isEmpty(orders)}">
+                <h2>Nenhum pedido cadastrado</h2>
+                <p>Os pedidos criados pelo checkout ou manualmente aparecem aqui.</p>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

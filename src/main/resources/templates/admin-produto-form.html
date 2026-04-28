@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${pageTitle + ' - Admin'}"></title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/image/favicon.png" />
+    <link href="/css/style.css" rel="stylesheet" />
+</head>
+<body>
+
+    <nav class="custom-navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos">
+            </a>
+
+            <div class="navbar-links">
+                <a class="nav-link" th:href="@{/home}">Home</a>
+                <a class="nav-link" th:href="@{/meus-pedidos}">Meus pedidos</a>
+                <a class="nav-link active" th:href="@{/admin/produtos}">Admin</a>
+            </div>
+
+            <div class="navbar-icons">
+                <form th:action="@{/logout}" method="post" class="nav-logout-form">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit" class="nav-icon nav-icon-button">
+                        <img th:src="@{/image/Seta.png}" alt="Sair">
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <h1 class="page-title" th:text="${pageTitle}"></h1>
+                    <p class="section-subtitle" th:text="${editMode ? product.id : 'Novo cadastro no catalogo'}"></p>
+                </div>
+                <a class="secondary-link" th:href="@{/admin/produtos}">Voltar para lista</a>
+            </div>
+
+            <div class="admin-switcher">
+                <a class="admin-switch-link" th:href="@{/admin/pedidos}">Pedidos</a>
+                <a class="admin-switch-link is-active" th:href="@{/admin/produtos}">Produtos</a>
+            </div>
+
+            <div class="checkout-layout">
+                <section class="checkout-panel">
+                    <form class="checkout-form" th:action="@{${formAction}}" th:object="${productForm}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                        <div class="checkout-grid">
+                            <div class="form-group">
+                                <label class="checkout-label" for="name">Nome</label>
+                                <input
+                                    id="name"
+                                    th:field="*{name}"
+                                    class="input-control"
+                                    th:classappend="${#fields.hasErrors('name')} ? ' input-error' : ''"
+                                    required
+                                >
+                                <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkout-label" for="subtitle">Subtitulo</label>
+                                <input
+                                    id="subtitle"
+                                    th:field="*{subtitle}"
+                                    class="input-control"
+                                    th:classappend="${#fields.hasErrors('subtitle')} ? ' input-error' : ''"
+                                    required
+                                >
+                                <p class="field-error" th:if="${#fields.hasErrors('subtitle')}" th:errors="*{subtitle}"></p>
+                            </div>
+                        </div>
+
+                        <div class="checkout-grid">
+                            <div class="form-group">
+                                <label class="checkout-label" for="weight">Peso</label>
+                                <input
+                                    id="weight"
+                                    th:field="*{weight}"
+                                    class="input-control"
+                                    th:classappend="${#fields.hasErrors('weight')} ? ' input-error' : ''"
+                                    required
+                                >
+                                <p class="field-error" th:if="${#fields.hasErrors('weight')}" th:errors="*{weight}"></p>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkout-label" for="price">Preco</label>
+                                <input
+                                    id="price"
+                                    type="number"
+                                    step="0.01"
+                                    min="0.01"
+                                    th:field="*{price}"
+                                    class="input-control"
+                                    th:classappend="${#fields.hasErrors('price')} ? ' input-error' : ''"
+                                    required
+                                >
+                                <p class="field-error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkout-label" for="imageFileName">Imagem</label>
+                            <input
+                                id="imageFileName"
+                                th:field="*{imageFileName}"
+                                class="input-control"
+                                th:classappend="${#fields.hasErrors('imageFileName')} ? ' input-error' : ''"
+                                required
+                            >
+                            <p class="field-hint">Use uma URL completa ou o nome do arquivo dentro de <code>/image</code>.</p>
+                            <p class="field-error" th:if="${#fields.hasErrors('imageFileName')}" th:errors="*{imageFileName}"></p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkout-label" for="altText">Texto alternativo</label>
+                            <input
+                                id="altText"
+                                th:field="*{altText}"
+                                class="input-control"
+                                th:classappend="${#fields.hasErrors('altText')} ? ' input-error' : ''"
+                            >
+                            <p class="field-error" th:if="${#fields.hasErrors('altText')}" th:errors="*{altText}"></p>
+                        </div>
+
+                        <label class="checkbox-field">
+                            <input type="checkbox" th:field="*{featured}">
+                            <span>Exibir este produto como destaque na home</span>
+                        </label>
+
+                        <div class="checkout-actions">
+                            <a class="secondary-link" th:href="@{/admin/produtos}">Cancelar</a>
+                            <button type="submit" class="btn-checkout" th:text="${editMode ? 'Salvar alteracoes' : 'Cadastrar produto'}"></button>
+                        </div>
+                    </form>
+                </section>
+
+                <aside class="product-preview-card" th:if="${editMode}">
+                    <div class="product-preview-image">
+                        <img th:src="${product.imageUrl}" th:alt="${product.altText}">
+                    </div>
+                    <div class="product-preview-meta">
+                        <div>
+                            <strong th:text="${product.name}"></strong>
+                            <p class="section-subtitle" th:text="${product.subtitle}"></p>
+                        </div>
+                        <div>
+                            <strong>Preco</strong>
+                            <p th:text="${product.formattedPrice}"></p>
+                        </div>
+                        <div>
+                            <strong>Peso</strong>
+                            <p th:text="${product.weight}"></p>
+                        </div>
+                        <div>
+                            <strong>Destaque</strong>
+                            <p th:text="${product.featured ? 'Sim' : 'Nao'}"></p>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

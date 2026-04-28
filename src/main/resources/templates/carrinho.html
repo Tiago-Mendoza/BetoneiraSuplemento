@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
-
 <head>
     <title>Carrinho - Betoneira Suplementos</title>
     <meta charset="UTF-8" />
@@ -8,10 +7,8 @@
     <link rel="icon" href="/image/favicon.png" />
     <link href="/css/style.css" rel="stylesheet" />
 </head>
-
 <body>
 
-    <!-- Universal Navbar -->
     <nav class="custom-navbar">
         <div class="navbar-container">
             <a class="navbar-brand" th:href="@{/}">
@@ -38,85 +35,96 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main>
         <div class="container">
             <h1 class="page-title">Meu Carrinho</h1>
 
+            <div class="page-message page-message-success" th:if="${param.added}">
+                Item adicionado ao carrinho.
+            </div>
+
+            <div class="page-message page-message-info" th:if="${param.updated}">
+                Quantidade atualizada.
+            </div>
+
+            <div class="page-message page-message-info" th:if="${param.removed}">
+                Item removido do carrinho.
+            </div>
+
+            <div class="page-message page-message-info" th:if="${param.empty}">
+                Adicione um item antes de seguir para o checkout.
+            </div>
+
             <div class="cart-container">
-                <!-- Cart Items List -->
                 <div class="cart-items">
+                    <div class="cart-empty" th:if="${cart.empty}">
+                        <p>Seu carrinho está vazio.</p>
+                        <a class="cart-empty-link" th:href="@{/produtos}">Ver produtos</a>
+                    </div>
 
-                    <!-- Item 1 -->
-                    <div class="cart-item">
+                    <div class="cart-item" th:each="item : ${cart.items}">
                         <div class="cart-item-img-container">
-                            <img th:src="@{/image/WHEYCHOCOL-removebg-preview.png}" alt="Whey Chocolate">
+                            <img th:src="${item.product.imageUrl}" th:alt="${item.product.altText}">
                         </div>
                         <div class="cart-item-details">
-                            <h3 class="cart-item-title">Whey</h3>
-                            <p class="cart-item-desc">Sabor Chocolate • 900g</p>
+                            <h3 class="cart-item-title" th:text="${item.product.name}"></h3>
+                            <p class="cart-item-desc" th:text="${item.product.displayDescription}"></p>
                             <span class="product-weight">Em estoque</span>
                         </div>
                         <div class="cart-item-actions">
                             <div class="qty-control">
-                                <button class="qty-btn"
-                                    onclick="const qtyEl = this.nextElementSibling; if(qtyEl.value > 1) qtyEl.value--">-</button>
-                                <input class="qty-input" type="number" value="1" min="1" readonly>
-                                <button class="qty-btn" onclick="this.previousElementSibling.value++">+</button>
+                                <form class="qty-form" th:action="@{/carrinho/atualizar}" method="post">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <input type="hidden" name="productId" th:value="${item.product.id}">
+                                    <input type="hidden" name="quantity" th:value="${item.quantity - 1}">
+                                    <button type="submit" class="qty-btn" th:disabled="${item.quantity == 1}">-</button>
+                                </form>
+                                <input class="qty-input" type="number" th:value="${item.quantity}" min="1" readonly>
+                                <form class="qty-form" th:action="@{/carrinho/atualizar}" method="post">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <input type="hidden" name="productId" th:value="${item.product.id}">
+                                    <input type="hidden" name="quantity" th:value="${item.quantity + 1}">
+                                    <button type="submit" class="qty-btn">+</button>
+                                </form>
                             </div>
-                            <div class="cart-item-price">R$ 119,99</div>
-                            <button class="btn-remove">Remover</button>
+                            <div class="cart-item-price" th:text="${item.formattedLineTotal}"></div>
+                            <form th:action="@{/carrinho/remover}" method="post">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                <input type="hidden" name="productId" th:value="${item.product.id}">
+                                <button type="submit" class="btn-remove">Remover</button>
+                            </form>
                         </div>
                     </div>
-
-                    <!-- Item 2 -->
-                    <div class="cart-item">
-                        <div class="cart-item-img-container">
-                            <img th:src="@{/image/CREATINAEMPÓ-removebg-preview.png}" alt="Creatina">
-                        </div>
-                        <div class="cart-item-details">
-                            <h3 class="cart-item-title">Creatina</h3>
-                            <p class="cart-item-desc">Pura Micronizada • 300g</p>
-                            <span class="product-weight">Em estoque</span>
-                        </div>
-                        <div class="cart-item-actions">
-                            <div class="qty-control">
-                                <button class="qty-btn"
-                                    onclick="const qtyEl2 = this.nextElementSibling; if(qtyEl2.value > 1) qtyEl2.value--">-</button>
-                                <input class="qty-input" type="number" value="2" min="1" readonly>
-                                <button class="qty-btn" onclick="this.previousElementSibling.value++">+</button>
-                            </div>
-                            <div class="cart-item-price">R$ 239,98</div>
-                            <button class="btn-remove">Remover</button>
-                        </div>
-                    </div>
-
                 </div>
 
-                <!-- Cart Summary -->
                 <div class="cart-summary">
                     <h2 class="summary-title">Resumo do Pedido</h2>
 
                     <div class="summary-row">
-                        <span>Subtotal (3 itens)</span>
-                        <span>R$ 359,97</span>
+                        <span th:text="${'Subtotal (' + cart.itemsLabel + ')'}"></span>
+                        <span th:text="${cart.formattedSubtotal}"></span>
                     </div>
                     <div class="summary-row">
                         <span>Frete Expresso</span>
-                        <span>R$ 25,00</span>
+                        <span th:text="${cart.formattedShipping}"></span>
                     </div>
 
                     <div class="summary-total">
                         <span>Total:</span>
-                        <span>R$ 384,97</span>
+                        <span th:text="${cart.formattedTotal}"></span>
                     </div>
 
-                    <button class="btn-checkout" onclick="window.location.href='/login'">Finalizar Compra</button>
+                    <a
+                        class="btn-checkout checkout-link"
+                        th:classappend="${cart.empty} ? ' is-disabled' : ''"
+                        th:href="${cart.empty} ? @{/carrinho} : @{/checkout}"
+                    >
+                        Ir para checkout
+                    </a>
                 </div>
             </div>
         </div>
     </main>
 
 </body>
-
 </html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pedido Confirmado - Betoneira Suplementos</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/image/favicon.png" />
+    <link href="/css/style.css" rel="stylesheet" />
+</head>
+<body>
+
+    <nav class="custom-navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos">
+            </a>
+
+            <div class="navbar-links">
+                <a class="nav-link" th:href="@{/home}">Home</a>
+                <a class="nav-link" th:href="@{/produtos}">Produtos</a>
+                <a class="nav-link" th:href="@{/sobre-nos}">Sobre nós</a>
+            </div>
+
+            <div class="navbar-icons">
+                <a class="nav-icon" href="#">
+                    <img th:src="@{/image/Lupa.png}" alt="Buscar">
+                </a>
+                <a class="nav-icon" th:href="@{/carrinho}">
+                    <img th:src="@{/image/CarCompras.png}" alt="Carrinho de Compras">
+                </a>
+                <a class="nav-icon" th:href="@{/login}">
+                    <img th:src="@{/image/Seta.png}" alt="Login">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <div class="checkout-success-card">
+                <span class="checkout-success-badge">Pedido confirmado</span>
+                <h1 class="page-title checkout-success-title">Compra realizada</h1>
+                <p class="checkout-success-text">
+                    Seu pedido <strong th:text="${order.orderNumber}"></strong> foi registrado com sucesso em
+                    <strong th:text="${order.formattedCreatedAt}"></strong>.
+                </p>
+
+                <div class="checkout-success-grid">
+                    <div class="checkout-success-box">
+                        <h2 class="checkout-title">Entrega</h2>
+                        <p th:text="${order.recipientName}"></p>
+                        <p th:text="${order.fullAddress}"></p>
+                    </div>
+
+                    <div class="checkout-success-box">
+                        <h2 class="checkout-title">Pagamento</h2>
+                        <p th:text="${order.paymentMethod}"></p>
+                        <p th:text="${order.formattedTotal}"></p>
+                    </div>
+                </div>
+
+                <div class="checkout-success-box">
+                    <h2 class="checkout-title">Itens do pedido</h2>
+                    <div class="checkout-summary-item" th:each="item : ${order.items}">
+                        <div>
+                            <strong th:text="${item.productName}"></strong>
+                            <p th:text="${item.productSubtitle + ' • ' + item.productWeight}"></p>
+                        </div>
+                        <div class="checkout-summary-qty-price">
+                            <span th:text="${'x' + item.quantity}"></span>
+                            <strong th:text="${#numbers.formatCurrency(item.lineTotal)}"></strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-actions">
+                    <a class="secondary-link" th:href="@{/meus-pedidos}">Ver meus pedidos</a>
+                    <a class="secondary-link" th:href="@{/produtos}">Continuar comprando</a>
+                    <a class="btn-checkout checkout-success-button" th:href="@{/home}">Voltar para home</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

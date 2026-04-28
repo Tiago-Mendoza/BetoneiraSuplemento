@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Meus Pedidos - Betoneira Suplementos</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/image/favicon.png" />
+    <link href="/css/style.css" rel="stylesheet" />
+</head>
+<body>
+
+    <nav class="custom-navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" th:href="@{/}">
+                <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos">
+            </a>
+
+            <div class="navbar-links">
+                <a class="nav-link" th:href="@{/home}">Home</a>
+                <a class="nav-link" th:href="@{/produtos}">Produtos</a>
+                <a class="nav-link" th:href="@{/sobre-nos}">Sobre nós</a>
+            </div>
+
+            <div class="navbar-icons">
+                <a class="nav-icon" href="#">
+                    <img th:src="@{/image/Lupa.png}" alt="Buscar">
+                </a>
+                <a class="nav-icon" th:href="@{/carrinho}">
+                    <img th:src="@{/image/CarCompras.png}" alt="Carrinho de Compras">
+                </a>
+                <a class="nav-icon" th:href="@{/login}">
+                    <img th:src="@{/image/Seta.png}" alt="Login">
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <h1 class="page-title">Meus Pedidos</h1>
+                    <p class="section-subtitle" th:text="${customerEmail}"></p>
+                </div>
+                <a class="secondary-link" th:href="@{/produtos}">Continuar comprando</a>
+            </div>
+
+            <div class="empty-state" th:if="${#lists.isEmpty(orders)}">
+                <h2>Nenhum pedido encontrado</h2>
+                <p>Quando você concluir uma compra, ela aparece aqui.</p>
+                <a class="btn-checkout checkout-success-button" th:href="@{/produtos}">Explorar produtos</a>
+            </div>
+
+            <div class="order-history-list" th:if="${!#lists.isEmpty(orders)}">
+                <article class="order-card" th:each="order : ${orders}">
+                    <div class="order-card-header">
+                        <div>
+                            <h2 class="order-card-title" th:text="${order.orderNumber}"></h2>
+                            <p class="order-card-meta" th:text="${order.formattedCreatedAt}"></p>
+                        </div>
+                        <div class="order-card-values">
+                            <span class="order-status-badge" th:text="${order.status}"></span>
+                            <strong th:text="${order.formattedTotal}"></strong>
+                        </div>
+                    </div>
+
+                    <div class="order-card-grid">
+                        <div class="order-card-box">
+                            <h3>Entrega</h3>
+                            <p th:text="${order.recipientName}"></p>
+                            <p th:text="${order.fullAddress}"></p>
+                        </div>
+
+                        <div class="order-card-box">
+                            <h3>Pagamento</h3>
+                            <p th:text="${order.paymentMethod}"></p>
+                            <p th:text="${order.itemsCount + ' itens'}"></p>
+                        </div>
+                    </div>
+
+                    <div class="order-items">
+                        <div class="order-item-row" th:each="item : ${order.items}">
+                            <div>
+                                <strong th:text="${item.productName}"></strong>
+                                <p th:text="${item.productSubtitle + ' • ' + item.productWeight}"></p>
+                            </div>
+                            <div class="checkout-summary-qty-price">
+                                <span th:text="${'x' + item.quantity}"></span>
+                                <strong th:text="${#numbers.formatCurrency(item.lineTotal)}"></strong>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
