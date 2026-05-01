@@ -1,23 +1,14 @@
 package com.curso.boot.BetoneiraSuplementos;
 
-import com.curso.boot.BetoneiraSuplementos.cart.model.CartSummary;
-import com.curso.boot.BetoneiraSuplementos.cart.service.CartService;
-import com.curso.boot.BetoneiraSuplementos.store.service.ProductCatalogService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import com.curso.boot.cart.CartSummary;
+import com.curso.boot.cart.CartService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -36,24 +27,6 @@ class CartFlowIntegrationTests {
     @Autowired
     private CartService cartService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Value("${app.products.file}")
-    private String productsFile;
-
-    private Path productsFilePath;
-
-    @BeforeEach
-    void resetProductsFile() throws IOException {
-        productsFilePath = Path.of(productsFile).toAbsolutePath().normalize();
-        Files.createDirectories(productsFilePath.getParent());
-        Files.writeString(
-            productsFilePath,
-            objectMapper.writeValueAsString(ProductCatalogService.getDefaultCatalog()),
-            StandardCharsets.UTF_8
-        );
-    }
 
     @Test
     void adicionarProdutoCriaCarrinhoNaSessao() throws Exception {
@@ -62,7 +35,7 @@ class CartFlowIntegrationTests {
         mockMvc.perform(post("/carrinho/adicionar")
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .session(session)
-                .param("productId", "whey-chocolate"))
+                .param("productId", "1"))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/carrinho?added"));
 
@@ -76,13 +49,13 @@ class CartFlowIntegrationTests {
     @Test
     void atualizarQuantidadeRecalculaTotais() throws Exception {
         MockHttpSession session = new MockHttpSession();
-        cartService.addProduct("whey-chocolate", session);
-        cartService.addProduct("creatina-ouro-em-po", session);
+        cartService.addProduct(1L, session);
+        cartService.addProduct(2L, session);
 
         mockMvc.perform(post("/carrinho/atualizar")
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .session(session)
-                .param("productId", "whey-chocolate")
+                .param("productId", "1")
                 .param("quantity", "3"))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/carrinho?updated"));
@@ -97,12 +70,12 @@ class CartFlowIntegrationTests {
     @Test
     void removerProdutoEsvaziaCarrinhoQuandoUltimoItemSai() throws Exception {
         MockHttpSession session = new MockHttpSession();
-        cartService.addProduct("whey-chocolate", session);
+        cartService.addProduct(1L, session);
 
         mockMvc.perform(post("/carrinho/remover")
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .session(session)
-                .param("productId", "whey-chocolate"))
+                .param("productId", "1"))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/carrinho?removed"));
 
@@ -116,7 +89,7 @@ class CartFlowIntegrationTests {
     @Test
     void carrinhoRenderizaItensDaSessao() throws Exception {
         MockHttpSession session = new MockHttpSession();
-        cartService.addProduct("whey-chocolate", session);
+        cartService.addProduct(1L, session);
 
         mockMvc.perform(get("/carrinho").session(session))
             .andExpect(status().isOk())

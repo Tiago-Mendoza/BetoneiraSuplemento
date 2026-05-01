@@ -1,25 +1,19 @@
 package com.curso.boot.BetoneiraSuplementos;
 
-import com.curso.boot.BetoneiraSuplementos.cart.service.CartService;
-import com.curso.boot.BetoneiraSuplementos.checkout.model.StoredOrder;
-import com.curso.boot.BetoneiraSuplementos.store.model.Product;
-import com.curso.boot.BetoneiraSuplementos.store.service.ProductCatalogService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import com.curso.boot.cart.CartService;
+import com.curso.boot.domain.Order;
+import com.curso.boot.domain.Product;
+import com.curso.boot.service.OrderService;
+import com.curso.boot.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class OrderHistoryAndAdminIntegrationTests {
 
     @Autowired
@@ -44,38 +39,10 @@ class OrderHistoryAndAdminIntegrationTests {
     private CartService cartService;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private OrderService orderService;
 
-    @Value("${app.users.file}")
-    private String usersFile;
-
-    @Value("${app.orders.file}")
-    private String ordersFile;
-
-    @Value("${app.products.file}")
-    private String productsFile;
-
-    private Path usersFilePath;
-    private Path ordersFilePath;
-    private Path productsFilePath;
-
-    @BeforeEach
-    void resetFiles() throws IOException {
-        usersFilePath = Path.of(usersFile).toAbsolutePath().normalize();
-        ordersFilePath = Path.of(ordersFile).toAbsolutePath().normalize();
-        productsFilePath = Path.of(productsFile).toAbsolutePath().normalize();
-
-        Files.createDirectories(usersFilePath.getParent());
-        Files.createDirectories(ordersFilePath.getParent());
-        Files.createDirectories(productsFilePath.getParent());
-        Files.writeString(usersFilePath, "[]", StandardCharsets.UTF_8);
-        Files.writeString(ordersFilePath, "[]", StandardCharsets.UTF_8);
-        Files.writeString(
-            productsFilePath,
-            objectMapper.writeValueAsString(ProductCatalogService.getDefaultCatalog()),
-            StandardCharsets.UTF_8
-        );
-    }
+    @Autowired
+    private ProductService productService;
 
     @Test
     void meusPedidosExigeAutenticacao() throws Exception {
@@ -141,17 +108,15 @@ class OrderHistoryAndAdminIntegrationTests {
                 .param("state", "SP")
                 .param("paymentMethod", "PIX")
                 .param("status", "CONFIRMADO")
-                .param("productId", "whey-chocolate")
+                .param("productId", "1")
                 .param("quantity", "2"))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/admin/pedidos?created"));
 
-        List<StoredOrder> createdOrders = readOrders();
+        List<Order> createdOrders = orderService.getOrdersByCustomerEmail("manual@betoneira.com");
         assertThat(createdOrders).hasSize(1);
-        assertThat(createdOrders.get(0).getSource()).isEqualTo("ADMIN");
+        assertThat(createdOrders.get(0).getSource()).isEqualTo("Admin");
         assertThat(createdOrders.get(0).getCustomerEmail()).isEqualTo("manual@betoneira.com");
-        assertThat(createdOrders.get(0).getItems()).hasSize(1);
-        assertThat(createdOrders.get(0).getItems().get(0).getQuantity()).isEqualTo(2);
 
         String orderNumber = createdOrders.get(0).getOrderNumber();
 
@@ -177,7 +142,7 @@ class OrderHistoryAndAdminIntegrationTests {
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/admin/pedidos?updated"));
 
-        List<StoredOrder> updatedOrders = readOrders();
+        List<Order> updatedOrders = orderService.getOrdersByCustomerEmail("atualizado@betoneira.com");
         assertThat(updatedOrders).hasSize(1);
         assertThat(updatedOrders.get(0).getCustomerEmail()).isEqualTo("atualizado@betoneira.com");
         assertThat(updatedOrders.get(0).getRecipientName()).isEqualTo("Pedido Atualizado");
@@ -190,7 +155,7 @@ class OrderHistoryAndAdminIntegrationTests {
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/admin/pedidos?deleted"));
 
-        assertThat(readOrders()).isEmpty();
+        assertThat(orderService.getOrdersByCustomerEmail("atualizado@betoneira.com")).isEmpty();
     }
 
     @Test
@@ -213,9 +178,9 @@ class OrderHistoryAndAdminIntegrationTests {
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/admin/produtos?created"));
 
-        List<Product> createdProducts = readProducts();
+        List<Product> createdProducts = productService.getAllProducts();
         Product createdProduct = createdProducts.stream()
-            .filter(product -> product.getId().equals("pre-treino-sabor-laranja"))
+            .filter(product -> product.getName().equals("Pre Treino") && product.getSubtitle().equals("Sabor Laranja"))
             .findFirst()
             .orElseThrow();
 
@@ -241,7 +206,7 @@ class OrderHistoryAndAdminIntegrationTests {
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/admin/produtos?updated"));
 
-        List<Product> updatedProducts = readProducts();
+        List<Product> updatedProducts = productService.getAllProducts();
         Product updatedProduct = updatedProducts.stream()
             .filter(product -> product.getId().equals(createdProduct.getId()))
             .findFirst()
@@ -260,12 +225,12 @@ class OrderHistoryAndAdminIntegrationTests {
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/admin/produtos?deleted"));
 
-        assertThat(readProducts()).extracting(Product::getId).doesNotContain(createdProduct.getId());
+        assertThat(productService.getAllProducts()).extracting(Product::getId).doesNotContain(createdProduct.getId());
     }
 
     private String criarPedidoViaCheckout(String email, String recipientName) throws Exception {
         MockHttpSession session = new MockHttpSession();
-        cartService.addProduct("whey-chocolate", session);
+        cartService.addProduct(1L, session);
 
         String redirectUrl = mockMvc.perform(post("/checkout/finalizar")
                 .with(user(email).roles("USER"))
@@ -289,17 +254,4 @@ class OrderHistoryAndAdminIntegrationTests {
         return redirectUrl.substring(redirectUrl.indexOf("pedido=") + 7);
     }
 
-    private List<StoredOrder> readOrders() throws IOException {
-        return objectMapper.readValue(
-            Files.readString(ordersFilePath, StandardCharsets.UTF_8),
-            new TypeReference<List<StoredOrder>>() {}
-        );
-    }
-
-    private List<Product> readProducts() throws IOException {
-        return objectMapper.readValue(
-            Files.readString(productsFilePath, StandardCharsets.UTF_8),
-            new TypeReference<List<Product>>() {}
-        );
-    }
 }

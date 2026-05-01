@@ -1,22 +1,14 @@
 package com.curso.boot.BetoneiraSuplementos;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import com.curso.boot.domain.User;
+import com.curso.boot.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
@@ -27,28 +19,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class AuthFlowIntegrationTests {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Value("${app.users.file}")
-    private String usersFile;
-
-    private Path usersFilePath;
-
-    @BeforeEach
-    void resetUsersFile() throws IOException {
-        usersFilePath = Path.of(usersFile).toAbsolutePath().normalize();
-        Files.createDirectories(usersFilePath.getParent());
-        Files.writeString(usersFilePath, "[]", StandardCharsets.UTF_8);
-    }
+    private UserService userService;
 
     @Test
-    void cadastroValidoSalvaUsuarioNoJson() throws Exception {
+    void cadastroValidoSalvaUsuarioNoBanco() throws Exception {
         mockMvc.perform(post("/cadastro")
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
                 .param("email", "teste@betoneira.com")
@@ -62,15 +43,12 @@ class AuthFlowIntegrationTests {
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/login?registered"));
 
-        List<Map<String, Object>> users = objectMapper.readValue(
-            Files.readString(usersFilePath, StandardCharsets.UTF_8),
-            new TypeReference<>() {}
-        );
+        User user = userService.findByEmail("teste@betoneira.com");
 
-        assertThat(users).hasSize(1);
-        assertThat(users.get(0).get("email")).isEqualTo("teste@betoneira.com");
-        assertThat(users.get(0).get("cpf")).isEqualTo("12345678901");
-        assertThat((String) users.get(0).get("passwordHash")).isNotEqualTo("123456");
+        assertThat(user).isNotNull();
+        assertThat(user.getEmail()).isEqualTo("teste@betoneira.com");
+        assertThat(user.getCpf()).isEqualTo("12345678901");
+        assertThat(user.getPasswordHash()).isNotEqualTo("123456");
     }
 
     @Test

@@ -1,26 +1,19 @@
 package com.curso.boot.BetoneiraSuplementos;
 
-import com.curso.boot.BetoneiraSuplementos.cart.model.CartSummary;
-import com.curso.boot.BetoneiraSuplementos.cart.service.CartService;
-import com.curso.boot.BetoneiraSuplementos.store.service.ProductCatalogService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import com.curso.boot.cart.CartSummary;
+import com.curso.boot.cart.CartService;
+import com.curso.boot.domain.Order;
+import com.curso.boot.service.OrderService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -33,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class CheckoutFlowIntegrationTests {
 
     @Autowired
@@ -42,31 +36,7 @@ class CheckoutFlowIntegrationTests {
     private CartService cartService;
 
     @Autowired
-    private ObjectMapper objectMapper;
-
-    @Value("${app.orders.file}")
-    private String ordersFile;
-
-    @Value("${app.products.file}")
-    private String productsFile;
-
-    private Path ordersFilePath;
-    private Path productsFilePath;
-
-    @BeforeEach
-    void resetFiles() throws IOException {
-        ordersFilePath = Path.of(ordersFile).toAbsolutePath().normalize();
-        productsFilePath = Path.of(productsFile).toAbsolutePath().normalize();
-
-        Files.createDirectories(ordersFilePath.getParent());
-        Files.createDirectories(productsFilePath.getParent());
-        Files.writeString(ordersFilePath, "[]", StandardCharsets.UTF_8);
-        Files.writeString(
-            productsFilePath,
-            objectMapper.writeValueAsString(ProductCatalogService.getDefaultCatalog()),
-            StandardCharsets.UTF_8
-        );
-    }
+    private OrderService orderService;
 
     @Test
     void checkoutExigeAutenticacao() throws Exception {
@@ -77,8 +47,8 @@ class CheckoutFlowIntegrationTests {
     @Test
     void finalizarCheckoutSalvaPedidoELimpaCarrinho() throws Exception {
         MockHttpSession session = new MockHttpSession();
-        cartService.addProduct("whey-chocolate", session);
-        cartService.addProduct("creatina-ouro-em-po", session);
+        cartService.addProduct(1L, session);
+        cartService.addProduct(2L, session);
 
         mockMvc.perform(post("/checkout/finalizar")
                 .with(user("teste@betoneira.com").roles("USER"))
@@ -96,15 +66,12 @@ class CheckoutFlowIntegrationTests {
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrlPattern("/checkout/sucesso?pedido=BTN-*"));
 
-        List<Map<String, Object>> orders = objectMapper.readValue(
-            Files.readString(ordersFilePath, StandardCharsets.UTF_8),
-            new TypeReference<>() {}
-        );
+        List<Order> orders = orderService.getOrdersByCustomerEmail("teste@betoneira.com");
 
         assertThat(orders).hasSize(1);
-        assertThat(orders.get(0).get("customerEmail")).isEqualTo("teste@betoneira.com");
-        assertThat(orders.get(0).get("paymentMethod")).isEqualTo("PIX");
-        assertThat(orders.get(0).get("total").toString()).isEqualTo("264.98");
+        assertThat(orders.get(0).getCustomerEmail()).isEqualTo("teste@betoneira.com");
+        assertThat(orders.get(0).getPaymentMethod()).isEqualTo("PIX");
+        assertThat(orders.get(0).getTotal().toString()).isEqualTo("264.98");
 
         CartSummary summary = cartService.getSummary(session);
         assertThat(summary.isEmpty()).isTrue();
@@ -113,7 +80,7 @@ class CheckoutFlowIntegrationTests {
     @Test
     void sucessoRenderizaPedidoSalvo() throws Exception {
         MockHttpSession session = new MockHttpSession();
-        cartService.addProduct("whey-chocolate", session);
+        cartService.addProduct(1L, session);
 
         String redirectUrl = mockMvc.perform(post("/checkout/finalizar")
                 .with(user("teste@betoneira.com").roles("USER"))
