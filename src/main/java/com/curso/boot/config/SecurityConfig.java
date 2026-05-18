@@ -15,6 +15,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/css/**", "/image/**", "/error").permitAll()
                 .requestMatchers("/", "/home", "/produtos", "/sobre-nos", "/login", "/cadastro").permitAll()
                 .requestMatchers("/carrinho", "/carrinho/**").permitAll()
@@ -23,6 +24,10 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
             )
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/h2-console/**")
+            )
+            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")

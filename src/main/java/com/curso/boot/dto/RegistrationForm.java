@@ -4,7 +4,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -37,7 +36,7 @@ public class RegistrationForm {
     private String genero;
 
     @NotBlank(message = "Crie uma senha.")
-    @Pattern(regexp = "\\d{6}", message = "A senha deve conter 6 dÃ­gitos.")
+    @Size(min = 6, message = "A senha deve conter no mínimo 6 caracteres.")
     private String password;
 
     public String getEmail() {
