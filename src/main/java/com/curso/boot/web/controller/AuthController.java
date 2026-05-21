@@ -66,7 +66,7 @@ public class AuthController {
     private void validateRegistrationData(RegistrationForm cadastroForm, BindingResult bindingResult) {
         String cpf = digitsOnly(cadastroForm.getCpf());
         if (!cpf.isBlank() && cpf.length() != 11) {
-            bindingResult.rejectValue("cpf", "invalid", "Informe um CPF com 11 dÃ­gitos.");
+            bindingResult.rejectValue("cpf", "invalid", "Informe um CPF com 11 dígitos.");
         }
 
         String telefoneCelular = digitsOnly(cadastroForm.getTelefoneCelular());
@@ -74,7 +74,7 @@ public class AuthController {
             bindingResult.rejectValue(
                 "telefoneCelular",
                 "invalid",
-                "Informe um telefone celular com 10 ou 11 dÃ­gitos."
+                "Informe um telefone celular com 10 ou 11 dígitos."
             );
         }
 
@@ -83,8 +83,15 @@ public class AuthController {
             bindingResult.rejectValue(
                 "telefoneFixo",
                 "invalid",
-                "Informe um telefone fixo com 10 ou 11 dÃ­gitos."
+                "Informe um telefone fixo com 10 ou 11 dígitos."
             );
+        }
+
+        // Validar confirmação de senha
+        if (cadastroForm.getPassword() != null && cadastroForm.getConfirmPassword() != null) {
+            if (!cadastroForm.getPassword().equals(cadastroForm.getConfirmPassword())) {
+                bindingResult.rejectValue("confirmPassword", "mismatch", "As senhas não coincidem.");
+            }
         }
     }
 

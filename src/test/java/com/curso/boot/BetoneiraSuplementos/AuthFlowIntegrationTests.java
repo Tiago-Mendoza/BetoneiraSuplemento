@@ -32,14 +32,15 @@ class AuthFlowIntegrationTests {
     void cadastroValidoSalvaUsuarioNoBanco() throws Exception {
         mockMvc.perform(post("/cadastro")
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
-                .param("email", "teste@betoneira.com")
-                .param("cpf", "123.456.789-01")
                 .param("nome", "Usuário Teste")
+                .param("cpf", "123.456.789-01")
+                .param("email", "teste@betoneira.com")
                 .param("dataNascimento", "2000-01-01")
                 .param("telefoneCelular", "11999999999")
                 .param("telefoneFixo", "1133334444")
                 .param("genero", "Masculino")
-                .param("password", "123456"))
+                .param("password", "123456")
+                .param("confirmPassword", "123456"))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/login?registered"));
 
@@ -57,27 +58,29 @@ class AuthFlowIntegrationTests {
 
         mockMvc.perform(post("/cadastro")
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
-                .param("email", "teste@betoneira.com")
-                .param("cpf", "98765432100")
                 .param("nome", "Outro Usuário")
+                .param("cpf", "98765432100")
+                .param("email", "teste@betoneira.com")
                 .param("dataNascimento", "2001-02-02")
                 .param("telefoneCelular", "11911111111")
                 .param("telefoneFixo", "")
                 .param("genero", "Feminino")
-                .param("password", "654321"))
+                .param("password", "654321")
+                .param("confirmPassword", "654321"))
             .andExpect(status().isOk())
             .andExpect(model().attributeHasFieldErrors("cadastroForm", "email"));
 
         mockMvc.perform(post("/cadastro")
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
-                .param("email", "novo@betoneira.com")
-                .param("cpf", "12345678901")
                 .param("nome", "Usuário CPF Duplicado")
+                .param("cpf", "12345678901")
+                .param("email", "novo@betoneira.com")
                 .param("dataNascimento", "2001-02-02")
                 .param("telefoneCelular", "11911111111")
                 .param("telefoneFixo", "")
                 .param("genero", "Feminino")
-                .param("password", "654321"))
+                .param("password", "654321")
+                .param("confirmPassword", "654321"))
             .andExpect(status().isOk())
             .andExpect(model().attributeHasFieldErrors("cadastroForm", "cpf"));
     }
@@ -95,17 +98,35 @@ class AuthFlowIntegrationTests {
             .andExpect(authenticated().withUsername("teste@betoneira.com"));
     }
 
-    private void registrarUsuarioPadrao() throws Exception {
+    @Test
+    void cadastroRejeicaSenhasNaoCoincidentes() throws Exception {
         mockMvc.perform(post("/cadastro")
                 .with(SecurityMockMvcRequestPostProcessors.csrf())
-                .param("email", "teste@betoneira.com")
-                .param("cpf", "12345678901")
                 .param("nome", "Usuário Teste")
+                .param("cpf", "12345678901")
+                .param("email", "teste@betoneira.com")
                 .param("dataNascimento", "2000-01-01")
                 .param("telefoneCelular", "11999999999")
                 .param("telefoneFixo", "1133334444")
                 .param("genero", "Masculino")
-                .param("password", "123456"))
+                .param("password", "123456")
+                .param("confirmPassword", "654321"))
+            .andExpect(status().isOk())
+            .andExpect(model().attributeHasFieldErrors("cadastroForm", "confirmPassword"));
+    }
+
+    private void registrarUsuarioPadrao() throws Exception {
+        mockMvc.perform(post("/cadastro")
+                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                .param("nome", "Usuário Teste")
+                .param("cpf", "12345678901")
+                .param("email", "teste@betoneira.com")
+                .param("dataNascimento", "2000-01-01")
+                .param("telefoneCelular", "11999999999")
+                .param("telefoneFixo", "1133334444")
+                .param("genero", "Masculino")
+                .param("password", "123456")
+                .param("confirmPassword", "123456"))
             .andExpect(status().is3xxRedirection());
     }
 }

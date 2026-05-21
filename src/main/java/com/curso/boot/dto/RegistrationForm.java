@@ -11,19 +11,19 @@ import java.time.LocalDate;
 
 public class RegistrationForm {
 
-    @NotBlank(message = "Informe seu e-mail.")
-    @Email(message = "Informe um e-mail vÃ¡lido.")
-    private String email;
-
-    @NotBlank(message = "Informe seu CPF.")
-    private String cpf;
-
     @NotBlank(message = "Informe seu nome completo.")
     @Size(min = 3, max = 100, message = "Informe um nome com pelo menos 3 caracteres.")
     private String nome;
 
+    @NotBlank(message = "Informe seu CPF.")
+    private String cpf;
+
+    @NotBlank(message = "Informe seu e-mail.")
+    @Email(message = "Informe um e-mail válido.")
+    private String email;
+
     @NotNull(message = "Informe sua data de nascimento.")
-    @Past(message = "Informe uma data de nascimento vÃ¡lida.")
+    @Past(message = "Informe uma data de nascimento válida.")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate dataNascimento;
 
@@ -32,12 +32,15 @@ public class RegistrationForm {
 
     private String telefoneFixo;
 
-    @NotBlank(message = "Selecione um gÃªnero.")
+    @NotBlank(message = "Selecione um gênero.")
     private String genero;
 
     @NotBlank(message = "Crie uma senha.")
-    @Size(min = 6, message = "A senha deve conter no mínimo 6 caracteres.")
+    @Size(min = 6, max = 15, message = "A senha deve conter entre 6 e 15 caracteres.")
     private String password;
+
+    @NotBlank(message = "Confirme sua senha.")
+    private String confirmPassword;
 
     public String getEmail() {
         return email;
@@ -101,5 +104,13 @@ public class RegistrationForm {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 }
