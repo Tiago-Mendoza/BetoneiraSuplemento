@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Betoneira Suplementos</title>
+    <meta name="description" content="Entre na sua conta Betoneira Suplementos para acompanhar seus pedidos.">
     <link rel="icon" th:href="@{/image/favicon.png}" />
     <link rel="stylesheet" th:href="@{/css/premium-auth.css}">
 </head>
@@ -26,16 +28,33 @@
                 <a class="nav-icon" th:href="@{/carrinho}">
                     <img th:src="@{/image/CarCompras.png}" alt="Carrinho de Compras">
                 </a>
-                <a class="nav-icon active" th:href="@{/login}">
+                <div class="user-menu-wrapper" sec:authorize="isAuthenticated()">
+                    <button class="nav-icon user-menu-toggle" id="userMenuBtn" aria-label="Menu do usuário">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                        </svg>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <span class="user-dropdown-email" sec:authentication="name">usuário</span>
+                        <a class="user-dropdown-item" th:href="@{/meus-pedidos}">Meus Pedidos</a>
+                        <a class="user-dropdown-item admin-link" th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Painel Admin</a>
+                        <form th:action="@{/logout}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                            <button type="submit" class="user-dropdown-item user-dropdown-logout">Sair</button>
+                        </form>
+                    </div>
+                </div>
+                <a class="nav-icon active" th:href="@{/login}" sec:authorize="!isAuthenticated()">
                     <img th:src="@{/image/Seta.png}" alt="Login">
                 </a>
             </div>
         </div>
     </nav>
-    
+
     <div class="auth-page-container">
         <div class="auth-container">
-            <!-- Clicable Logo Redirecting to Home -->
+            <!-- Logo clicável -->
             <div class="logo-wrapper">
                 <a th:href="@{/home}">
                     <img th:src="@{/image/BetoneiraSuplementos 3.png}" alt="Betoneira Suplementos Logo">
@@ -46,15 +65,15 @@
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
                 <div class="auth-message auth-message-success" th:if="${param.registered}">
-                    Cadastro realizado com sucesso. Faça seu login.
+                    ✅ Cadastro realizado com sucesso. Faça seu login.
                 </div>
 
                 <div class="auth-message auth-message-error" th:if="${param.error}">
-                    E-mail ou senha inválidos.
+                    ❌ E-mail ou senha inválidos. Tente novamente.
                 </div>
 
                 <div class="auth-message auth-message-success" th:if="${param.logout}">
-                    Você saiu da sua conta.
+                    👋 Você saiu da sua conta com sucesso.
                 </div>
 
                 <div class="form-group">
@@ -63,8 +82,9 @@
                         id="email"
                         name="email"
                         class="input-control"
-                        placeholder="Ex: Email@mail.com"
+                        placeholder="Ex: email@mail.com"
                         autocomplete="email"
+                        maxlength="150"
                         required
                     >
                 </div>
@@ -75,8 +95,9 @@
                         id="password"
                         name="password"
                         class="input-control"
-                        placeholder="Adicionar Senha"
+                        placeholder="Sua senha"
                         autocomplete="current-password"
+                        maxlength="15"
                         required
                     >
                 </div>
@@ -84,10 +105,24 @@
                 <button type="submit" class="btn-auth">Entrar</button>
 
                 <div class="auth-links">
-                    <a th:href="@{/cadastro}" class="auth-link">Cadastre-se</a>
+                    <a th:href="@{/cadastro}" class="auth-link">Não tem conta? Cadastre-se</a>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        const btn = document.getElementById('userMenuBtn');
+        const dropdown = document.getElementById('userDropdown');
+        if (btn && dropdown) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdown.classList.toggle('open');
+            });
+            document.addEventListener('click', function() {
+                dropdown.classList.remove('open');
+            });
+        }
+    </script>
 </body>
 </html>

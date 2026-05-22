@@ -2,34 +2,28 @@ package com.curso.boot.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
 
 public class RegistrationForm {
 
     @NotBlank(message = "Informe seu nome completo.")
-    @Size(min = 3, max = 100, message = "Informe um nome com pelo menos 3 caracteres.")
+    @Size(min = 3, max = 100, message = "Informe um nome com entre 3 e 100 caracteres.")
     private String nome;
 
     @NotBlank(message = "Informe seu CPF.")
+    @Size(max = 20, message = "CPF inválido.")
     private String cpf;
 
     @NotBlank(message = "Informe seu e-mail.")
     @Email(message = "Informe um e-mail válido.")
+    @Size(max = 150, message = "O e-mail deve ter no máximo 150 caracteres.")
     private String email;
 
-    @NotNull(message = "Informe sua data de nascimento.")
-    @Past(message = "Informe uma data de nascimento válida.")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private LocalDate dataNascimento;
-
     @NotBlank(message = "Informe seu telefone celular.")
+    @Size(max = 20, message = "Telefone inválido.")
     private String telefoneCelular;
 
+    @Size(max = 20, message = "Telefone inválido.")
     private String telefoneFixo;
 
     @NotBlank(message = "Selecione um gênero.")
@@ -40,6 +34,7 @@ public class RegistrationForm {
     private String password;
 
     @NotBlank(message = "Confirme sua senha.")
+    @Size(max = 15, message = "A senha deve conter no máximo 15 caracteres.")
     private String confirmPassword;
 
     public String getEmail() {
@@ -64,14 +59,6 @@ public class RegistrationForm {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public LocalDate getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(LocalDate dataNascimento) {
-        this.dataNascimento = dataNascimento;
     }
 
     public String getTelefoneCelular() {

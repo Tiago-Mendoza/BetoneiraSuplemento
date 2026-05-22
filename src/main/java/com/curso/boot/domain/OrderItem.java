@@ -20,6 +20,12 @@ public class OrderItem extends AbstractEntity<Long> {
     @Column(name = "product_name")
     private String productName;
 
+    @Column(name = "product_subtitle")
+    private String productSubtitle;
+
+    @Column(name = "product_weight")
+    private String productWeight;
+
     @Column(name = "product_image")
     private String productImage;
 
@@ -52,6 +58,22 @@ public class OrderItem extends AbstractEntity<Long> {
         this.productName = productName;
     }
 
+    public String getProductSubtitle() {
+        return productSubtitle;
+    }
+
+    public void setProductSubtitle(String productSubtitle) {
+        this.productSubtitle = productSubtitle;
+    }
+
+    public String getProductWeight() {
+        return productWeight;
+    }
+
+    public void setProductWeight(String productWeight) {
+        this.productWeight = productWeight;
+    }
+
     public String getProductImage() {
         return productImage;
     }
@@ -79,6 +101,11 @@ public class OrderItem extends AbstractEntity<Long> {
     public BigDecimal getTotal() {
         if (unitPrice == null) return BigDecimal.ZERO;
         return unitPrice.multiply(BigDecimal.valueOf(quantity));
+    }
+
+    /** Alias used by templates: ${item.lineTotal} */
+    public BigDecimal getLineTotal() {
+        return getTotal();
     }
 
     public String getFormattedUnitPrice() {

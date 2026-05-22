@@ -21,7 +21,7 @@ public class SecurityConfig {
                 .requestMatchers("/carrinho", "/carrinho/**").permitAll()
                 .requestMatchers("/meus-pedidos", "/meus-pedidos/**").authenticated()
                 .requestMatchers("/checkout", "/checkout/**").authenticated()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
             )
             .csrf(csrf -> csrf
