@@ -4,6 +4,7 @@ import com.curso.boot.dto.AdminProductForm;
 import com.curso.boot.domain.Product;
 import com.curso.boot.service.ProductService;
 import jakarta.validation.Valid;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -88,8 +89,13 @@ public class AdminProductController {
 
     @PostMapping("/admin/produtos/{productId}/remover")
     public String removerProduto(@PathVariable String productId) {
-        ProductService.deleteProduct(productId);
-        return "redirect:/admin/produtos?deleted";
+        try {
+            ProductService.deleteProduct(productId);
+            return "redirect:/admin/produtos?deleted";
+        } catch (DataIntegrityViolationException e) {
+            // Produto está vinculado a pedidos e não pode ser excluído
+            return "redirect:/admin/produtos?errorDelete";
+        }
     }
 
     private AdminProductForm mapToForm(Product product) {

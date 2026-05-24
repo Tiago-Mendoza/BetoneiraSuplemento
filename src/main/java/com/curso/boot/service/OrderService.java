@@ -53,7 +53,7 @@ public class OrderService {
     @Transactional
     public Order createOrder(String customerEmail, CheckoutForm form, CartSummary cartSummary) {
         Order order = new Order();
-        String orderNum = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "-" + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
+        String orderNum = "BTN-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "-" + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
         order.setOrderNumber(orderNum);
         order.setCustomerEmail(customerEmail);
         order.setRecipientName(form.getRecipientName());
@@ -95,7 +95,7 @@ public class OrderService {
     @Transactional
     public void createAdminOrder(AdminOrderCreateForm form) {
         Order order = new Order();
-        String orderNum = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "-" + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
+        String orderNum = "BTN-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + "-" + UUID.randomUUID().toString().substring(0, 4).toUpperCase();
         order.setOrderNumber(orderNum);
         order.setCustomerEmail(form.getCustomerEmail());
         order.setRecipientName(form.getRecipientName());

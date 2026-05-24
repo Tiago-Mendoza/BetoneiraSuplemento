@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -30,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@Sql("/data.sql")
 class OrderHistoryAndAdminIntegrationTests {
 
     @Autowired
@@ -47,7 +49,7 @@ class OrderHistoryAndAdminIntegrationTests {
     @Test
     void meusPedidosExigeAutenticacao() throws Exception {
         mockMvc.perform(get("/meus-pedidos"))
-            .andExpect(status().is3xxRedirection());
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test
@@ -57,11 +59,11 @@ class OrderHistoryAndAdminIntegrationTests {
 
         mockMvc.perform(get("/meus-pedidos")
                 .with(user("cliente1@betoneira.com").roles("USER")))
-            .andExpect(status().isOk())
-            .andExpect(content().string(containsString(firstOrderNumber)))
-            .andExpect(content().string(containsString("Cliente Um")))
-            .andExpect(content().string(not(containsString("Cliente Dois"))))
-            .andExpect(content().string(not(containsString("cliente2@betoneira.com"))));
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(firstOrderNumber)))
+                .andExpect(content().string(containsString("Cliente Um")))
+                .andExpect(content().string(not(containsString("Cliente Dois"))))
+                .andExpect(content().string(not(containsString("cliente2@betoneira.com"))));
     }
 
     @Test
@@ -71,28 +73,28 @@ class OrderHistoryAndAdminIntegrationTests {
         mockMvc.perform(get("/checkout/sucesso")
                 .with(user("cliente2@betoneira.com").roles("USER"))
                 .param("pedido", orderNumber))
-            .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden());
 
         mockMvc.perform(get("/checkout/sucesso")
                 .with(user("admin@betoneira.com").roles("ADMIN"))
                 .param("pedido", orderNumber))
-            .andExpect(status().isOk())
-            .andExpect(content().string(containsString(orderNumber)));
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(orderNumber)));
     }
 
     @Test
     void areaAdminExigeRoleAdmin() throws Exception {
         mockMvc.perform(get("/admin/pedidos")
                 .with(user("cliente@betoneira.com").roles("USER")))
-            .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden());
     }
 
     @Test
     void adminCrudDePedidosFunciona() throws Exception {
         mockMvc.perform(get("/admin/pedidos/novo")
                 .with(user("admin@betoneira.com").roles("ADMIN")))
-            .andExpect(status().isOk())
-            .andExpect(content().string(containsString("Novo Pedido")));
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Novo Pedido")));
 
         mockMvc.perform(post("/admin/pedidos")
                 .with(user("admin@betoneira.com").roles("ADMIN"))
@@ -110,8 +112,8 @@ class OrderHistoryAndAdminIntegrationTests {
                 .param("status", "CONFIRMADO")
                 .param("productId", "1")
                 .param("quantity", "2"))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/admin/pedidos?created"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/pedidos?created"));
 
         List<Order> createdOrders = orderService.getOrdersByCustomerEmail("manual@betoneira.com");
         assertThat(createdOrders).hasSize(1);
@@ -122,8 +124,8 @@ class OrderHistoryAndAdminIntegrationTests {
 
         mockMvc.perform(get("/admin/pedidos/" + orderNumber)
                 .with(user("admin@betoneira.com").roles("ADMIN")))
-            .andExpect(status().isOk())
-            .andExpect(content().string(containsString(orderNumber)));
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(orderNumber)));
 
         mockMvc.perform(post("/admin/pedidos/" + orderNumber + "/atualizar")
                 .with(user("admin@betoneira.com").roles("ADMIN"))
@@ -139,8 +141,8 @@ class OrderHistoryAndAdminIntegrationTests {
                 .param("state", "SP")
                 .param("paymentMethod", "Boleto")
                 .param("status", "ENVIADO"))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/admin/pedidos?updated"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/pedidos?updated"));
 
         List<Order> updatedOrders = orderService.getOrdersByCustomerEmail("atualizado@betoneira.com");
         assertThat(updatedOrders).hasSize(1);
@@ -152,8 +154,8 @@ class OrderHistoryAndAdminIntegrationTests {
         mockMvc.perform(post("/admin/pedidos/" + orderNumber + "/remover")
                 .with(user("admin@betoneira.com").roles("ADMIN"))
                 .with(SecurityMockMvcRequestPostProcessors.csrf()))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/admin/pedidos?deleted"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/pedidos?deleted"));
 
         assertThat(orderService.getOrdersByCustomerEmail("atualizado@betoneira.com")).isEmpty();
     }
@@ -162,8 +164,8 @@ class OrderHistoryAndAdminIntegrationTests {
     void adminCrudDeProdutosFunciona() throws Exception {
         mockMvc.perform(get("/admin/produtos/novo")
                 .with(user("admin@betoneira.com").roles("ADMIN")))
-            .andExpect(status().isOk())
-            .andExpect(content().string(containsString("Novo produto")));
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Novo produto")));
 
         mockMvc.perform(post("/admin/produtos")
                 .with(user("admin@betoneira.com").roles("ADMIN"))
@@ -175,14 +177,15 @@ class OrderHistoryAndAdminIntegrationTests {
                 .param("imageFileName", "https://cdn.example.com/pre-treino.png")
                 .param("altText", "Pre Treino Laranja")
                 .param("featured", "true"))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/admin/produtos?created"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/produtos?created"));
 
         List<Product> createdProducts = productService.getAllProducts();
         Product createdProduct = createdProducts.stream()
-            .filter(product -> product.getName().equals("Pre Treino") && product.getSubtitle().equals("Sabor Laranja"))
-            .findFirst()
-            .orElseThrow();
+                .filter(product -> product.getName().equals("Pre Treino")
+                        && product.getSubtitle().equals("Sabor Laranja"))
+                .findFirst()
+                .orElseThrow();
 
         assertThat(createdProduct.getName()).isEqualTo("Pre Treino");
         assertThat(createdProduct.getPrice()).isEqualByComparingTo("89.90");
@@ -191,8 +194,8 @@ class OrderHistoryAndAdminIntegrationTests {
 
         mockMvc.perform(get("/admin/produtos/" + createdProduct.getId())
                 .with(user("admin@betoneira.com").roles("ADMIN")))
-            .andExpect(status().isOk())
-            .andExpect(content().string(containsString("Editar produto")));
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Editar produto")));
 
         mockMvc.perform(post("/admin/produtos/" + createdProduct.getId() + "/atualizar")
                 .with(user("admin@betoneira.com").roles("ADMIN"))
@@ -203,14 +206,14 @@ class OrderHistoryAndAdminIntegrationTests {
                 .param("price", "99.50")
                 .param("imageFileName", "pre-treino-uva.png")
                 .param("altText", "Pre Treino Uva"))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/admin/produtos?updated"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/produtos?updated"));
 
         List<Product> updatedProducts = productService.getAllProducts();
         Product updatedProduct = updatedProducts.stream()
-            .filter(product -> product.getId().equals(createdProduct.getId()))
-            .findFirst()
-            .orElseThrow();
+                .filter(product -> product.getId().equals(createdProduct.getId()))
+                .findFirst()
+                .orElseThrow();
 
         assertThat(updatedProduct.getName()).isEqualTo("Pre Treino Extreme");
         assertThat(updatedProduct.getSubtitle()).isEqualTo("Sabor Uva");
@@ -222,8 +225,8 @@ class OrderHistoryAndAdminIntegrationTests {
         mockMvc.perform(post("/admin/produtos/" + createdProduct.getId() + "/remover")
                 .with(user("admin@betoneira.com").roles("ADMIN"))
                 .with(SecurityMockMvcRequestPostProcessors.csrf()))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/admin/produtos?deleted"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/produtos?deleted"));
 
         assertThat(productService.getAllProducts()).extracting(Product::getId).doesNotContain(createdProduct.getId());
     }
@@ -245,11 +248,11 @@ class OrderHistoryAndAdminIntegrationTests {
                 .param("city", "Sao Paulo")
                 .param("state", "SP")
                 .param("paymentMethod", "PIX"))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrlPattern("/checkout/sucesso?pedido=BTN-*"))
-            .andReturn()
-            .getResponse()
-            .getRedirectedUrl();
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("/checkout/sucesso?pedido=BTN-*"))
+                .andReturn()
+                .getResponse()
+                .getRedirectedUrl();
 
         return redirectUrl.substring(redirectUrl.indexOf("pedido=") + 7);
     }

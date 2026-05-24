@@ -59,6 +59,10 @@
                 Produto removido com sucesso.
             </div>
 
+            <div class="page-message page-message-error" th:if="${param.errorDelete}">
+                ⚠️ Este produto não pode ser excluído pois está vinculado a pedidos existentes.
+            </div>
+
             <div class="admin-table-wrapper" th:if="${!#lists.isEmpty(products)}">
                 <table class="admin-table">
                     <thead>

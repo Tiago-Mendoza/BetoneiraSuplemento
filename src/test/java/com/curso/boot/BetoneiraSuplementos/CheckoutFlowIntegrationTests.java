@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
+@Sql("/data.sql")
 class CheckoutFlowIntegrationTests {
 
     @Autowired
@@ -41,7 +43,7 @@ class CheckoutFlowIntegrationTests {
     @Test
     void checkoutExigeAutenticacao() throws Exception {
         mockMvc.perform(get("/checkout"))
-            .andExpect(status().is3xxRedirection());
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test
@@ -63,8 +65,8 @@ class CheckoutFlowIntegrationTests {
                 .param("city", "São Paulo")
                 .param("state", "SP")
                 .param("paymentMethod", "PIX"))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrlPattern("/checkout/sucesso?pedido=BTN-*"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("/checkout/sucesso?pedido=BTN-*"));
 
         List<Order> orders = orderService.getOrdersByCustomerEmail("teste@betoneira.com");
 
@@ -95,14 +97,14 @@ class CheckoutFlowIntegrationTests {
                 .param("city", "São Paulo")
                 .param("state", "SP")
                 .param("paymentMethod", "Cartão de Crédito"))
-            .andReturn()
-            .getResponse()
-            .getRedirectedUrl();
+                .andReturn()
+                .getResponse()
+                .getRedirectedUrl();
 
         mockMvc.perform(get(redirectUrl)
                 .with(user("teste@betoneira.com").roles("USER")))
-            .andExpect(status().isOk())
-            .andExpect(content().string(org.hamcrest.Matchers.containsString("Pedido confirmado")))
-            .andExpect(content().string(org.hamcrest.Matchers.containsString("Usuário Checkout")));
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Pedido confirmado")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Usuário Checkout")));
     }
 }

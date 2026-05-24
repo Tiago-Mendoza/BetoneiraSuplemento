@@ -591,6 +591,12 @@ main {
     border: 1px solid rgba(255, 148, 40, 0.28);
 }
 
+.page-message-error {
+    background: rgba(220, 38, 38, 0.10);
+    color: #dc2626;
+    border: 1px solid rgba(220, 38, 38, 0.25);
+}
+
 .section-header {
     display: flex;
     align-items: flex-start;

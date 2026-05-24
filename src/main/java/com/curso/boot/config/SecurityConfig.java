@@ -19,6 +19,10 @@ public class SecurityConfig {
                 .requestMatchers("/css/**", "/image/**", "/error").permitAll()
                 .requestMatchers("/", "/home", "/produtos", "/sobre-nos", "/login", "/cadastro").permitAll()
                 .requestMatchers("/carrinho", "/carrinho/**").permitAll()
+                // ── API REST interna ──────────────────────────────────────────
+                .requestMatchers("/api/produtos/**").permitAll()        // catálogo público
+                .requestMatchers("/api/pedidos/**").authenticated()     // requer login
+                // ─────────────────────────────────────────────────────────────
                 .requestMatchers("/meus-pedidos", "/meus-pedidos/**").authenticated()
                 .requestMatchers("/checkout", "/checkout/**").authenticated()
                 .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")

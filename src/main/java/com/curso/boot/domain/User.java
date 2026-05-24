@@ -1,7 +1,6 @@
 package com.curso.boot.domain;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +17,6 @@ public class User extends AbstractEntity<Long> {
     @Column(nullable = false)
     private String nome;
 
-    @Column(name = "data_nascimento")
-    private LocalDate dataNascimento;
 
     @Column(name = "telefone_celular")
     private String telefoneCelular;
@@ -61,13 +58,6 @@ public class User extends AbstractEntity<Long> {
         this.nome = nome;
     }
 
-    public LocalDate getDataNascimento() {
-        return dataNascimento;
-    }
-
-    public void setDataNascimento(LocalDate dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
 
     public String getTelefoneCelular() {
         return telefoneCelular;
